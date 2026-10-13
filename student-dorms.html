@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel & Dormitory Booking | Elimu Student Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --danger: #DC2626;
+            --warning: #D97706;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+        }
+
+        .sidebar-nav a.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            height: 70px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .content-body {
+            padding: 2rem;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .dorm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .dorm-card {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .dorm-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .dorm-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bed-selection {
+            margin-top: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        select {
+            padding: 0.6rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: white;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.65rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        .btn-danger:hover {
+            background-color: #B91C1C;
+        }
+
+        .booked-banner {
+            background: #DCFCE7;
+            border: 1px solid #BBF7D0;
+            color: #166534;
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>Student Portal</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="student-dashboard.html">Dashboard</a>
+                <a href="student-subjects.html">Register Units</a>
+                <a href="student-supplementary.html" class="active">Supplementary Registration</a>
+                <a href="student-timetable.html">My Timetable</a>
+                <a href="student-exam-card.html" class="active">Exam Card</a>
+                <a href="student-attendance.html" class="active"> Attendance</a>
+                <a href="student-dorms.html" class="active">Hostel Booking</a>
+                <a href="student-materials.html">Learning Materials</a>
+                <a href="student-results.html">Exam Results</a>
+                <a href="#" id="logoutBtn" style="margin-top: auto; color: var(--danger);">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-title">
+                    <h1>Hostel & Dormitory Booking</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Current Booking Status Container -->
+                <div id="bookingStatusContainer"></div>
+
+                <!-- Available Dormitories Card -->
+                <div class="card">
+                    <div class="card-title">Available Dormitories & Beds</div>
+                    <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        Select a vacant bed in your preferred dormitory. Booking a room automatically adds the dormitory fee to your term account balance.
+                    </p>
+
+                    <div class="dorm-grid" id="dormsGrid">
+                        <div style="color: var(--text-muted); text-align: center; grid-column: 1 / -1; padding: 2rem;">Loading dormitories...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Module Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f",
+            measurementId: "G-DT8VYBS3DV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUserUid = null;
+        let currentBooking = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "index.html";
+                return;
+            }
+            currentUserUid = user.uid;
+            loadDormitoryData();
+        });
+
+        async function loadDormitoryData() {
+            try {
+                // Check if student already booked a dorm
+                const bookingSnap = await getDoc(doc(db, "studentDormBookings", currentUserUid));
+                currentBooking = bookingSnap.exists() ? bookingSnap.data() : null;
+
+                renderBookingStatus();
+                renderDormsGrid();
+            } catch (err) {
+                console.error("Error loading dorm info:", err);
+            }
+        }
+        // In renderDormsGrid(), update the button event listener call:
+          await bookDormBed(dormId, dorm.dormName, bedNumber);
+
+        function renderBookingStatus() {
+            const container = document.getElementById("bookingStatusContainer");
+            if (!currentBooking) {
+                container.innerHTML = "";
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="booked-banner">
+                    <div>
+                        <strong>Active Accommodation:</strong> ${currentBooking.dormName} (${currentBooking.bedNumber})
+                        <br><span style="font-size: 0.8rem;">Fee charged: KES ${Number(currentBooking.feeAmount).toLocaleString()}</span>
+                    </div>
+                    <button class="btn-primary btn-danger" id="cancelBookingBtn">Checkout / Drop Room</button>
+                </div>
+            `;
+
+            document.getElementById("cancelBookingBtn").addEventListener("click", cancelDormBooking);
+        }
+
+        async function renderDormsGrid() {
+            const grid = document.getElementById("dormsGrid");
+            grid.innerHTML = "";
+
+            try {
+                const dormsSnap = await getDocs(collection(db, "dorms"));
+                if (dormsSnap.empty) {
+                    grid.innerHTML = `<div style="color: var(--text-muted); text-align: center; grid-column: 1 / -1; padding: 2rem;">No dormitories configured by admin yet.</div>`;
+                    return;
+                }
+
+                dormsSnap.forEach(docSnap => {
+                    const dorm = docSnap.data();
+                    const dormId = docSnap.id;
+                    const beds = dorm.beds || [];
+                    const vacantBeds = beds.filter(b => !b.isBooked);
+
+                    const card = document.createElement("div");
+                    card.className = "dorm-card";
+                    card.innerHTML = `
+                        <div class="dorm-name">${dorm.dormName}</div>
+                        <div class="dorm-meta">
+                            <span>Fee: <strong>KES ${Number(dorm.feeAmount || 0).toLocaleString()}</strong></span>
+                            <span>Vacant Beds: <strong>${vacantBeds.length} / ${beds.length}</strong></span>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">${dorm.description || 'Standard student accommodation.'}</p>
+                        
+                        ${currentBooking ? `
+                            <div style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-top: auto;">You already have an active booking.</div>
+                        ` : `
+                            <div class="bed-selection">
+                                <select id="select_${dormId}">
+                                    <option value="">-- Choose Vacant Bed --</option>
+                                    ${vacantBeds.map(b => `<option value="${b.bedNumber}">${b.bedNumber}</option>`).join('')}
+                                </select>
+                                <button class="btn-primary book-btn" data-dormid="${dormId}" data-dormname="${dorm.dormName}" data-fee="${dorm.feeAmount}">Book Bed</button>
+                            </div>
+                        `}
+                    `;
+                    grid.appendChild(card);
+                });
+
+                // Attach event listeners to book buttons
+                document.querySelectorAll(".book-btn").forEach(btn => {
+                    btn.addEventListener("click", async (e) => {
+                        const dormId = e.target.getAttribute("data-dormid");
+                        const dormName = e.target.getAttribute("data-dormname");
+                        const feeAmount = Number(e.target.getAttribute("data-fee"));
+                        const selectElem = document.getElementById(`select_${dormId}`);
+                        const bedNumber = selectElem.value;
+
+                        if (!bedNumber) {
+                            alert("Please select a bed number first.");
+                            return;
+                        }
+
+                        await bookDormBed(dormId, dormName, bedNumber, feeAmount);
+                    });
+                });
+
+            } catch (err) {
+                console.error("Error fetching dorms:", err);
+                grid.innerHTML = `<div style="color: var(--danger); text-align: center; grid-column: 1 / -1;">Failed to load dormitories.</div>`;
+            }
+        }
+
+ async function bookDormBed(dormId, dormName, bedNumber) {
+            try {
+                // 1. Fetch official dorm details and fee directly from the 'dorms' collection
+                const dormRef = doc(db, "dorms", dormId);
+                const dormSnap = await getDoc(dormRef);
+                if (!dormSnap.exists()) {
+                    alert("Dormitory information not found.");
+                    return;
+                }
+                const dormData = dormSnap.data();
+                const officialFee = Number(dormData.feeAmount || dormData.fee || 0);
+
+                // 2. Fetch Student Profile for Admission Number and Name
+                const studentSnap = await getDoc(doc(db, "students", currentUserUid));
+                const studentData = studentSnap.exists() ? studentSnap.data() : {};
+                const admNo = studentData.admissionNumber || studentData.admissionNo || studentData.admNo || studentData.regNumber || "N/A";
+                const studentName = studentData.fullName || studentData.name || "Student";
+
+                // 3. Update dorm document beds array in Firestore
+                const updatedBeds = dormData.beds.map(b => {
+                    if (b.bedNumber === bedNumber) {
+                        return { ...b, isBooked: true, bookedBy: currentUserUid };
+                    }
+                    return b;
+                });
+
+                await updateDoc(dormRef, { beds: updatedBeds });
+
+                // 4. Save student booking record to studentDormBookings with the official fee
+                await setDoc(doc(db, "studentDormBookings", currentUserUid), {
+                    studentUid: currentUserUid,
+                    admissionNumber: admNo,
+                    studentName: studentName,
+                    dormId: dormId,
+                    dormName: dormData.dormName || dormName,
+                    bedNumber: bedNumber,
+                    feeAmount: officialFee,
+                    bookedAt: serverTimestamp()
+                }, { merge: true });
+
+                // 5. Fetch current registered units to calculate exact tuition fee
+                let unitsCount = 0;
+                const subjSnap = await getDoc(doc(db, "studentSubjects", currentUserUid));
+                if (subjSnap.exists()) {
+                    const subjData = subjSnap.data();
+                    const arr = subjData.selectedSubjects || subjData.units || subjData.subjects || [];
+                    unitsCount = Array.isArray(arr) ? arr.length : 0;
+                }
+                const tuitionFee = unitsCount * 10000; // KES 10,000 per unit
+                const totalBill = tuitionFee + officialFee;
+
+                // 6. Fetch existing amount paid to preserve previous payments
+                const balanceRef = doc(db, "studentAccountBalances", currentUserUid);
+                const balSnap = await getDoc(balanceRef);
+                let amountPaid = 0;
+                if (balSnap.exists()) {
+                    amountPaid = Number(balSnap.data().amountPaid || 0);
+                }
+                const feeBalance = totalBill - amountPaid;
+
+                // 7. Synchronize full account balance with unified fields so accountant and student pages match
+                await setDoc(balanceRef, {
+                    studentUid: currentUserUid,
+                    admissionNumber: admNo,
+                    studentName: studentName,
+                    totalBill: totalBill,
+                    amountPaid: amountPaid,
+                    balance: feeBalance,
+                    tuitionFee: tuitionFee,
+                    hostelFee: officialFee,
+                    updatedAt: serverTimestamp()
+                }, { merge: true });
+
+                alert(`Successfully booked ${bedNumber} in ${dormData.dormName || dormName}!\nAccommodation fee of KES ${officialFee.toLocaleString()} has been fetched from database records and added to your fees.`);
+                loadDormitoryData();
+            } catch (err) {
+                console.error("Booking error:", err);
+                alert(`Error booking bed: ${err.message}`);
+            }
+        }
+        // Cancel Booking (Checkout)
+        async function cancelDormBooking() {
+            if (!confirm("Are you sure you want to checkout of your room? This will remove your booking and adjust your fee balance.")) return;
+
+            try {
+                const dormRef = doc(db, "dorms", currentBooking.dormId);
+                const dormSnap = await getDoc(dormRef);
+                
+                if (dormSnap.exists()) {
+                    const dormData = dormSnap.data();
+                    const updatedBeds = dormData.beds.map(b => {
+                        if (b.bedNumber === currentBooking.bedNumber) {
+                            return { ...b, isBooked: false, bookedBy: null };
+                        }
+                        return b;
+                    });
+                    await updateDoc(dormRef, { beds: updatedBeds });
+                }
+
+                // Recalculate bill without hostel fee
+                let unitsCount = 0;
+                const subjSnap = await getDoc(doc(db, "studentSubjects", currentUserUid));
+                if (subjSnap.exists()) {
+                    const subjData = subjSnap.data();
+                    const arr = subjData.selectedSubjects || subjData.units || subjData.subjects || [];
+                    unitsCount = Array.isArray(arr) ? arr.length : 0;
+                }
+                const tuitionFee = unitsCount * 10000;
+                const totalBill = tuitionFee; // 0 hostel fee
+
+                const balanceRef = doc(db, "studentAccountBalances", currentUserUid);
+                const balanceSnap = await getDoc(balanceRef);
+                let amountPaid = 0;
+                if (balanceSnap.exists()) {
+                    amountPaid = Number(balanceSnap.data().amountPaid || 0);
+                }
+                const feeBalance = totalBill - amountPaid;
+
+                // Update account balances after checkout
+                await setDoc(balanceRef, {
+                    totalBill: totalBill,
+                    amountPaid: amountPaid,
+                    balance: feeBalance,
+                    tuitionFee: tuitionFee,
+                    hostelFee: 0,
+                    updatedAt: serverTimestamp()
+                }, { merge: true });
+
+                // Delete booking record
+                await deleteDoc(doc(db, "studentDormBookings", currentUserUid));
+
+                alert("Successfully checked out of accommodation.");
+                loadDormitoryData();
+            } catch (err) {
+                console.error("Cancel booking error:", err);
+                alert(`Error: ${err.message}`);
+            }
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

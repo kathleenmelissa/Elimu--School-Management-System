@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Materials | Elimu Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --warning: #D97706;
+            --danger: #DC2626;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+        }
+
+        .sidebar-nav a.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            height: 75px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-welcome h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .header-welcome p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #F1F5F9;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .content-body {
+            padding: 2.5rem;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        /* Filter Controls */
+        .filter-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-select, .search-input {
+            padding: 0.5rem 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--secondary);
+            background: var(--surface);
+            outline: none;
+        }
+
+        .filter-select:focus, .search-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Materials Grid Styling */
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .material-card {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .material-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .material-subject-badge {
+            align-self: flex-start;
+            background: #E0E7FF;
+            color: #3730A3;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .material-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            line-height: 1.4;
+        }
+
+        .material-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .material-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--primary);
+            color: #FFFFFF;
+            padding: 0.4rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .download-btn:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>Student Portal</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="student-dashboard.html">Dashboard</a>
+                <a href="student-subjects.html">Register Units</a>
+                <a href="student-supplementary.html" class="active">Supplementary Registration</a>
+                <a href="student-dorms.html" class="active">Hostel Booking</a>
+                <a href="student-timetable.html">My Timetable</a>
+                <a href="student-examcard.html" class="active">Exam Card</a>
+                <a href="student-attendance.html" class="active"> Attendance</a>
+                <a href="student-materials.html" class="active">Learning Materials</a>
+                <a href="student-results.html">Exam Results</a>
+                <a href="#" id="logoutBtn" style="margin-top: auto; color: var(--danger);">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-welcome">
+                    <h1>Learning Materials</h1>
+                    <p>Access notes, assignments, and reference documents uploaded by your administrators and lecturers.</p>
+                </div>
+                <div class="user-badge" id="userBadgeDisplay">Loading...</div>
+            </header>
+
+            <div class="content-body">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Available Class Notes & Resources</div>
+                        <div class="filter-container">
+                            <input type="text" id="searchInput" class="search-input" placeholder="Search by title...">
+                            <select id="subjectFilter" class="filter-select">
+                                <option value="All">All Subjects</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Materials Grid Container -->
+                    <div id="materialsContainer" class="materials-grid">
+                        <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 3rem;">
+                            Loading learning materials...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f",
+            measurementId: "G-DT8VYBS3DV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let allMaterials = [];
+        let registeredSubjects = new Set();
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "/index.html";
+                return;
+            }
+
+            try {
+                // 1. Fetch Student Profile & Class info
+                const studentSnap = await getDoc(doc(db, "students", user.uid));
+                if (!studentSnap.exists()) {
+                    alert("Student profile not found.");
+                    return;
+                }
+                const studentData = studentSnap.data();
+                const studentClass = (studentData.className || "Form 1").trim().toLowerCase();
+                const studentName = studentData.fullName || studentData.name || "Student";
+
+                document.getElementById("userBadgeDisplay").textContent = `${studentName} (${studentData.className || "Form 1"})`;
+
+                // 2. Fetch Student's Registered Subjects
+                const regSnap = await getDoc(doc(db, "studentSubjects", user.uid));
+                let rawList = [];
+                if (regSnap.exists()) {
+                    rawList = regSnap.data().selectedSubjects || regSnap.data().subjects || [];
+                } else if (studentData.subjects) {
+                    rawList = studentData.subjects;
+                }
+                registeredSubjects = new Set(rawList.map(s => (typeof s === 'string' ? s : s.name).trim().toLowerCase()));
+
+                // Populating Subject Filter Dropdown with student's units
+                const subjectFilterSelect = document.getElementById("subjectFilter");
+                rawList.forEach(s => {
+                    const subName = typeof s === 'string' ? s : s.name;
+                    if (subName) {
+                        const opt = document.createElement("option");
+                        opt.value = subName.trim();
+                        opt.textContent = subName.trim();
+                        subjectFilterSelect.appendChild(opt);
+                    }
+                });
+
+                // 3. Fetch Learning Materials from Admin/Lecturers Collection (supports common collection names like 'materials', 'notes', or 'learningMaterials')
+                let materialsData = [];
+                const collectionNames = ["materials", "learningMaterials", "notes", "resources"];
+                
+                for (const colName of collectionNames) {
+                    try {
+                        const snap = await getDocs(collection(db, colName));
+                        if (!snap.empty) {
+                            snap.forEach(d => {
+                                const m = d.data();
+                                materialsData.push({
+                                    id: d.id,
+                                    title: m.title || m.name || m.fileName || "Untitled Document",
+                                    description: m.description || m.desc || "No description provided.",
+                                    subject: m.subject || m.unit || m.course || "General",
+                                    className: (m.className || m.class || "").trim().toLowerCase(),
+                                    fileUrl: m.fileUrl || m.url || m.file || m.link || "#",
+                                    date: m.createdAt || m.date || m.timestamp ? new Date(m.createdAt?.toDate ? m.createdAt.toDate() : m.createdAt || m.date).toLocaleDateString() : "Recent"
+                                });
+                            });
+                            break; // Stop once we find a populated collection
+                        }
+                    } catch (err) {
+                        console.warn(`Could not fetch from collection '${colName}':`, err);
+                    }
+                }
+
+                // Filter documents matching either the student's class or general documents
+                allMaterials = materialsData.filter(m => {
+                    const matchesClass = m.className === "" || m.className === studentClass || m.className.includes(studentClass);
+                    const matchesSubject = registeredSubjects.size === 0 || registeredSubjects.has(m.subject.trim().toLowerCase()) || m.subject.toLowerCase() === "general";
+                    return matchesClass || matchesSubject;
+                });
+
+                renderMaterials(allMaterials);
+
+            } catch (err) {
+                console.error("Error loading learning materials:", err);
+                document.getElementById("materialsContainer").innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--danger); padding: 3rem;">Error loading materials. Please try again later.</div>`;
+            }
+        });
+
+        // Search & Filter Event Listeners
+        document.getElementById("searchInput").addEventListener("input", filterAndRender);
+        document.getElementById("subjectFilter").addEventListener("change", filterAndRender);
+
+        function filterAndRender() {
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+            const selectedSubject = document.getElementById("subjectFilter").value;
+
+            const filtered = allMaterials.filter(item => {
+                const matchesSearch = item.title.toLowerCase().includes(searchTerm) || item.description.toLowerCase().includes(searchTerm);
+                const matchesSubject = selectedSubject === "All" || item.subject.trim().toLowerCase() === selectedSubject.trim().toLowerCase();
+                return matchesSearch && matchesSubject;
+            });
+
+            renderMaterials(filtered);
+        }
+
+        function renderMaterials(items) {
+            const container = document.getElementById("materialsContainer");
+            if (items.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 3rem;">No learning materials found matching your criteria.</div>`;
+                return;
+            }
+
+            let html = "";
+            items.forEach(item => {
+                html += `
+                    <div class="material-card">
+                        <span class="material-subject-badge">${item.subject}</span>
+                        <div class="material-title">${item.title}</div>
+                        <div class="material-desc">${item.description}</div>
+                        <div class="material-meta">
+                            <span>Added: ${item.date}</span>
+                            <a href="${item.fileUrl}" target="_blank" class="download-btn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                Download
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+            container.anim = false;
+            container.innerHTML = html;
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

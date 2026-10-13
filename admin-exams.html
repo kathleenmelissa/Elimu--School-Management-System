@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exams & Results | Elimu School Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --danger: #DC2626;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+        }
+
+        .sidebar-nav a.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            height: 70px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .content-body {
+            padding: 2rem;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Tabs bar */
+        .tabs-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Action Bar / Cards */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.4rem;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.65rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            outline: none;
+            background: var(--surface);
+        }
+
+        select:focus, input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.65rem 1.25rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            height: 42px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Tables */
+        .table-container {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 0.875rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #F1F5F9;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.active {
+            background-color: #DCFCE7;
+            color: #166534;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal {
+            background: var(--surface);
+            width: 100%;
+            max-width: 480px;
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-header h2 {
+            font-size: 1.15rem;
+            color: var(--secondary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .action-footer {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        input.marks-input {
+            width: 90px;
+            padding: 0.4rem 0.6rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>Elimu Admin</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/admin/dashboard.html" class="active">Dashboard</a>
+                <a href="admin-students.html">Students</a>
+                <a href="admin-teachers.html">Teachers</a>
+                <a href="admin-parents.html">Parents</a>
+                <a href="admin-accountants.html" class="active">Accountants</a>
+                <a href="admin-create-vc.html" class="active">VC</a>
+                <a href="admin-classes.html">Classes & Subjects</a>
+                <a href="admin-ip-management.html" class="active">Device IP Registration</a>
+                <a href="admin-dorms.html" class="active">Hostel & Dorms</a>
+                <a href="admin-attendance.html">Attendance</a>
+                <a href="admin-exams.html">Exams & Results</a>
+                <a href="admin-fees.html">Fee Management</a>
+                <a href="admin-timetable.html">Timetable</a>
+                <a href="admin-announcements.html">Announcements</a>
+                <a href="admin-materials.html">Learning Materials</a>
+                <a href="admin-settings.html">School Settings</a>
+                <a href="index.html">Log Out</a>
+            </nav>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-title">
+                    <h1>Exams & Results Management</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Navigation Tabs -->
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-target="examsTab">Manage Exams</button>
+                    <button class="tab-btn" data-target="resultsTab">Record & View Marks</button>
+                </div>
+
+                <!-- TAB 1: Manage Exams -->
+                <div class="tab-content active" id="examsTab">
+                    <div class="action-bar">
+                        <h2>Exam Series Directory</h2>
+                        <button class="btn-primary" id="openExamModalBtn">+ Create Exam Series</button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Exam Title</th>
+                                    <th>Term / Year</th>
+                                    <th>Start Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="examsTableBody">
+                                <tr>
+                                    <td colspan="4" style="text-align: center; color: var(--text-muted);">Loading exam records...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TAB 2: Record Marks -->
+                <div class="tab-content" id="resultsTab">
+                    <div class="filter-card">
+                        <div class="form-group">
+                            <label for="selectExam">Select Exam Series</label>
+                            <select id="selectExam" required>
+                                <option value="">-- Choose Exam --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="selectClass">Select Class</label>
+                            <select id="selectClass" required>
+                                <option value="">-- Choose Class --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="selectSubject">Select Subject</label>
+                            <select id="selectSubject" required>
+                                <option value="">-- Choose Subject --</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button class="btn-primary" id="loadMarksSheetBtn">Load Marks Sheet</button>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Admission No.</th>
+                                    <th>Student Full Name</th>
+                                    <th>Marks (Out of 100)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="marksTableBody">
+                                <tr>
+                                    <td colspan="3" style="text-align: center; color: var(--text-muted);">Select exam, class and subject above to load marks sheet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="action-footer" id="saveMarksContainer" style="display: none;">
+                        <button class="btn-primary" id="saveMarksBtn">Save Marks Sheet</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Exam Modal -->
+    <div class="modal-overlay" id="examModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Create Exam Series</h2>
+                <button class="close-btn" id="closeExamModal">&times;</button>
+            </div>
+            <form id="examForm">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="examTitle">Exam Title</label>
+                    <input type="text" id="examTitle" required placeholder="Term 1 Mid-Term Assessment">
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="examTerm">Term / Period</label>
+                    <select id="examTerm" required>
+                        <option value="">Select Term</option>
+                        <option value="Term 1">Term 1</option>
+                        <option value="Term 2">Term 2</option>
+                        <option value="Term 3">Term 3</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label for="examDate">Start Date</label>
+                    <input type="date" id="examDate" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;" id="saveExamBtn">Save Exam Series</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Module Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, addDoc, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f",
+            measurementId: "G-DT8VYBS3DV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Tab Switching Logic
+        const tabBtns = document.querySelectorAll(".tab-btn");
+        tabBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                tabBtns.forEach(b => b.classList.remove("active"));
+                document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+                
+                btn.classList.add("active");
+                document.getElementById(btn.getAttribute("data-target")).classList.add("active");
+            });
+        });
+
+        // Modal Controls
+        const modal = document.getElementById("examModal");
+        document.getElementById("openExamModalBtn").addEventListener("click", () => modal.style.display = "flex");
+        document.getElementById("closeExamModal").addEventListener("click", () => modal.style.display = "none");
+        window.addEventListener("click", (e) => {
+            if (e.target === modal) modal.style.display = "none";
+        });
+
+        // Auth Protection Guard
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "/login.html";
+                return;
+            }
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (!userDoc.exists() || userDoc.data().role !== "admin") {
+                    alert("Unauthorized access.");
+                    window.location.href = "/login.html";
+                    return;
+                }
+                loadExamsTable();
+                loadFilterDropdowns();
+            } catch (err) {
+                console.error("Auth check error:", err);
+            }
+        });
+
+        // Load Exams into Table & Dropdown
+        async function loadExamsTable() {
+            const tbody = document.getElementById("examsTableBody");
+            const selectExam = document.getElementById("selectExam");
+            try {
+                const snapshot = await getDocs(collection(db, "exams"));
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No exam series found.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                selectExam.innerHTML = `<option value="">-- Choose Exam --</option>`;
+
+                snapshot.forEach(docSnap => {
+                    const e = docSnap.data();
+                    
+                    // Add to table
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td><strong>${e.title}</strong></td>
+                        <td>${e.term || 'N/A'}</td>
+                        <td>${e.date || 'N/A'}</td>
+                        <td><span class="badge active">Scheduled</span></td>
+                    `;
+                    tbody.appendChild(tr);
+
+                    // Add to dropdown
+                    const option = document.createElement("option");
+                    option.value = docSnap.id;
+                    option.textContent = `${e.title} (${e.term})`;
+                    selectExam.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Error loading exams:", error);
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--danger);">Failed to load exams.</td></tr>`;
+            }
+        }
+
+        // Load Classes & Subjects for Results Tab Filter Dropdowns
+        async function loadFilterDropdowns() {
+            const classSelect = document.getElementById("selectClass");
+            const subjectSelect = document.getElementById("selectSubject");
+            try {
+                const classesSnap = await getDocs(collection(db, "classes"));
+                classesSnap.forEach(docSnap => {
+                    const c = docSnap.data();
+                    const opt = document.createElement("option");
+                    opt.value = c.className;
+                    opt.textContent = c.className;
+                    classSelect.appendChild(opt);
+                });
+
+                const subjectsSnap = await getDocs(collection(db, "subjects"));
+                subjectsSnap.forEach(docSnap => {
+                    const s = docSnap.data();
+                    const opt = document.createElement("option");
+                    opt.value = s.subjectName;
+                    opt.textContent = s.subjectName;
+                    subjectSelect.appendChild(opt);
+                });
+            } catch (err) {
+                console.error("Error loading filter dropdowns:", err);
+            }
+        }
+
+        // Handle Exam Creation
+        document.getElementById("examForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById("saveExamBtn");
+            btn.disabled = true;
+            btn.textContent = "Saving...";
+
+            try {
+                const examData = {
+                    title: document.getElementById("examTitle").value.trim(),
+                    term: document.getElementById("examTerm").value,
+                    date: document.getElementById("examDate").value,
+                    createdAt: serverTimestamp()
+                };
+
+                await addDoc(collection(db, "exams"), examData);
+                alert("Exam series created successfully!");
+                modal.style.display = "none";
+                document.getElementById("examForm").reset();
+                loadExamsTable();
+            } catch (err) {
+                console.error("Error saving exam:", err);
+                alert(`Error: ${err.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Save Exam Series";
+            }
+        });
+
+        // Load Marks Sheet Table
+        document.getElementById("loadMarksSheetBtn").addEventListener("click", async () => {
+            const examId = document.getElementById("selectExam").value;
+            const className = document.getElementById("selectClass").value;
+            const subjectName = document.getElementById("selectSubject").value;
+
+            if (!examId || !className || !subjectName) {
+                alert("Please select Exam Series, Class, and Subject.");
+                return;
+            }
+
+            const tbody = document.getElementById("marksTableBody");
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Loading students list...</td></tr>`;
+            document.getElementById("saveMarksContainer").style.display = "none";
+
+            try {
+                const sheetId = `${examId}_${className}_${subjectName}`;
+                const sheetDoc = await getDoc(doc(db, "results", sheetId));
+                let existingMarks = sheetDoc.exists() ? sheetDoc.data().marks : {};
+
+                const studentsSnap = await getDocs(collection(db, "students"));
+                const classStudents = [];
+                studentsSnap.forEach(docSnap => {
+                    const s = docSnap.data();
+                    if (s.className === className) {
+                        classStudents.push({ id: docSnap.id, ...s });
+                    }
+                });
+
+                if (classStudents.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">No students found in ${className}.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                classStudents.forEach(student => {
+                    const mark = existingMarks[student.id] !== undefined ? existingMarks[student.id] : "";
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td><strong>${student.admissionNumber || 'N/A'}</strong></td>
+                        <td>${student.firstName} ${student.lastName}</td>
+                        <td>
+                            <input type="number" min="0" max="100" class="marks-input" data-student-id="${student.id}" value="${mark}" placeholder="0-100">
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById("saveMarksContainer").style.display = "flex";
+            } catch (err) {
+                console.error("Error loading marks sheet:", err);
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--danger);">Failed to load marks sheet.</td></tr>`;
+            }
+        });
+
+        // Save Marks Sheet
+        document.getElementById("saveMarksBtn").addEventListener("click", async () => {
+            const examId = document.getElementById("selectExam").value;
+            const className = document.getElementById("selectClass").value;
+            const subjectName = document.getElementById("selectSubject").value;
+            const btn = document.getElementById("saveMarksBtn");
+
+            btn.disabled = true;
+            btn.textContent = "Saving Marks...";
+
+            try {
+                const inputs = document.querySelectorAll(".marks-input");
+                const marksMap = {};
+
+                inputs.forEach(input => {
+                    const studentId = input.getAttribute("data-student-id");
+                    const val = input.value.trim();
+                    if (val !== "") {
+                        marksMap[studentId] = Number(val);
+                    }
+                });
+
+                const sheetId = `${examId}_${className}_${subjectName}`;
+                await setDoc(doc(db, "results", sheetId), {
+                    examId: examId,
+                    className: className,
+                    subjectName: subjectName,
+                    marks: marksMap,
+                    updatedAt: serverTimestamp()
+                });
+
+                alert("Marks sheet saved successfully!");
+            } catch (err) {
+                console.error("Error saving marks:", err);
+                alert(`Error: ${err.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Save Marks Sheet";
+            }
+        });
+    </script>
+</body>
+</html>

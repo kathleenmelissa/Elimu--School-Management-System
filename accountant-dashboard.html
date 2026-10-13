@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accountant Dashboard | Elimu Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --danger: #DC2626;
+            --warning: #D97706;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+        }
+
+        .sidebar-nav a.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            height: 70px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .content-body {
+            padding: 2rem;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background-color: #F8FAFC;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.85rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 0.85rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.45rem 0.85rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        input.amount-input, select, input[type="text"] {
+            width: 100%;
+            padding: 0.35rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            font-size: 0.8rem;
+            background: #FFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>Finance Portal</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="accountant-dashboard.html" class="active">Fee Management</a>
+                <a href="#" id="logoutBtn" style="margin-top: auto; color: var(--danger);">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-title">
+                    <h1>Accountant & Fee Management Dashboard</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Overview Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Total Students Billable</span>
+                        <span class="stat-value" id="totalStudentsCount">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Tuition Fee Rate Per Unit</span>
+                        <span class="stat-value">KES 10,000</span>
+                    </div>
+                </div>
+
+                <!-- Student Accounts Table -->
+                <div class="card">
+                    <div class="card-title">Student Fee Accounts & Unit Billing</div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Adm No.</th>
+                                    <th>Student Name</th>
+                                    <th>Registered Units</th>
+                                    <th>Tuition Fee (KES)</th>
+                                    <th>Hostel Status & Fee</th>
+                                    <th>Total Bill (KES)</th>
+                                    <th>Amount Paid (KES)</th>
+                                    <th>Fee Balance (KES)</th>
+                                    <th>Record Payment (Mode & Ref)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentAccountsTable">
+                                <tr>
+                                    <td colspan="9" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading student financial accounts...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pending Transactions for VC Approval -->
+                <div class="card">
+                    <div class="card-title">Pending Fee Transactions (Awaiting VC Approval)</div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        These payments have been submitted by the accountant and are currently on hold pending Vice Chancellor authorization.
+                    </p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date Submitted</th>
+                                    <th>Adm No.</th>
+                                    <th>Student Name</th>
+                                    <th>Payment Mode</th>
+                                    <th>Reference / Code</th>
+                                    <th>Amount (KES)</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingTxnsAccountantTable">
+                                <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading pending transactions...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Module Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, addDoc, onSnapshot, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f",
+            measurementId: "G-DT8VYBS3DV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const FEE_PER_UNIT = 10000; // KES 10,000 per registered unit
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+            loadStudentFinancials();
+            loadAccountantPendingTransactions();
+        });
+
+        async function loadStudentFinancials() {
+            const tbody = document.getElementById("studentAccountsTable");
+            const totalStudentsCount = document.getElementById("totalStudentsCount");
+
+            try {
+                // 1. Fetch all students from 'students' collection
+                const studentsSnap = await getDocs(collection(db, "students"));
+                const studentsMap = {};
+                studentsSnap.forEach(d => {
+                    const data = d.data();
+                    studentsMap[d.id] = { id: d.id, ...data };
+                });
+
+                // 2. Fetch registered units from 'studentSubjects' collection
+                const studentUnitsMap = {};
+                try {
+                    const subjSnap = await getDocs(collection(db, "studentSubjects"));
+                    subjSnap.forEach(d => {
+                        const sData = d.data();
+                        const studentUid = sData.studentUid || d.id;
+                        const subjectsArr = sData.selectedSubjects || sData.units || sData.subjects || [];
+                        
+                        if (studentUid) {
+                            studentUnitsMap[studentUid] = Array.isArray(subjectsArr) ? subjectsArr.length : (Number(subjectsArr) || 0);
+                        }
+                    });
+                } catch (e) {
+                    console.warn("Error fetching studentSubjects:", e);
+                }
+
+                // 3. Fetch exact dorm bookings and fee amounts from 'studentDormBookings' collection
+                const studentDormBookingsMap = {};
+                try {
+                    const dormSnap = await getDocs(collection(db, "studentDormBookings"));
+                    dormSnap.forEach(d => {
+                        const bData = d.data();
+                        const studentUid = bData.studentUid || d.id;
+                        const dormName = bData.dormName || bData.hostelName || "Hostel";
+                        const feeAmount = Number(bData.feeAmount || bData.fee || bData.cost || 0);
+
+                        if (studentUid) {
+                            studentDormBookingsMap[studentUid] = { 
+                                name: dormName, 
+                                fee: feeAmount 
+                            };
+                        }
+                    });
+                } catch (e) {
+                    console.warn("Error fetching studentDormBookings:", e);
+                }
+
+                // 4. Fetch existing financial ledger balances
+                const accountBalances = {};
+                try {
+                    const balSnap = await getDocs(collection(db, "studentAccountBalances"));
+                    balSnap.forEach(d => {
+                        const bData = d.data();
+                        const linkedUid = bData.studentUid || d.id;
+                        if (linkedUid) accountBalances[linkedUid] = bData;
+                    });
+                } catch (e) {}
+
+                const studentIds = Object.keys(studentsMap);
+                totalStudentsCount.textContent = studentIds.length;
+
+                if (studentIds.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 2rem;">No students found in the database.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                for (const uid of studentIds) {
+                    const student = studentsMap[uid];
+                    
+                    const admNo = student.admissionNumber || 
+                                  student.admissionNo || 
+                                  student.admNo || 
+                                  student.admission || 
+                                  student.adm || 
+                                  student.regNumber || 
+                                  student.regNo || 
+                                  student.studentId || 
+                                  "N/A";
+
+                    const studentName = student.fullName || student.name || `${student.firstName || ''} ${student.lastName || ''}`.trim() || "Student";
+                    
+                    let unitsCount = studentUnitsMap[uid];
+                    if (unitsCount === undefined) {
+                        const studentUnitsArray = student.selectedSubjects || student.units || student.subjects || [];
+                        unitsCount = Array.isArray(studentUnitsArray) ? studentUnitsArray.length : 0;
+                    }
+                    const tuitionFee = unitsCount * FEE_PER_UNIT;
+
+                    const booking = studentDormBookingsMap[uid];
+                    const hostelName = booking ? booking.name : (student.hostelBooked || student.dormBooked || null);
+                    const hostelFee = booking ? booking.fee : (Number(student.hostelFee || student.dormFee) || 0);
+
+                    const existingAccount = accountBalances[uid] || {};
+                    const amountPaid = existingAccount.amountPaid !== undefined ? Number(existingAccount.amountPaid) : 0;
+                    const totalBill = tuitionFee + hostelFee;
+                    const feeBalance = totalBill - amountPaid;
+
+                    try {
+                        await setDoc(doc(db, "studentAccountBalances", uid), {
+                            studentUid: uid,
+                            admissionNumber: admNo,
+                            studentName: studentName,
+                            totalBill: totalBill,
+                            amountPaid: amountPaid,
+                            balance: feeBalance,
+                            tuitionFee: tuitionFee,
+                            hostelFee: hostelFee,
+                            updatedAt: serverTimestamp()
+                        }, { merge: true });
+                    } catch (syncErr) {
+                        console.warn("Could not auto-sync balance for UID:", uid, syncErr);
+                    }
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td><strong>${admNo}</strong></td>
+                        <td>${studentName}</td>
+                        <td>${unitsCount} Units</td>
+                        <td>KES ${tuitionFee.toLocaleString()}</td>
+                        <td><span style="color: ${hostelName ? 'var(--success)' : 'var(--text-muted)'}; font-weight: 600;">${hostelName ? hostelName + ' (KES ' + hostelFee.toLocaleString() + ')' : 'None'}</span></td>
+                        <td><strong>KES ${totalBill.toLocaleString()}</strong></td>
+                        <td>KES ${amountPaid.toLocaleString()}</td>
+                        <td style="color: ${feeBalance > 0 ? 'var(--danger)' : 'var(--success)'}; font-weight: 700;">KES ${feeBalance.toLocaleString()}</td>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 0.3rem; min-width: 170px;">
+                                <select id="mode_${uid}">
+                                    <option value="M-Pesa">M-Pesa</option>
+                                    <option value="Bank">Bank Deposit</option>
+                                    <option value="Cheque">Cheque</option>
+                                    <option value="Bursary">Bursary</option>
+                                </select>
+                                <input type="text" id="ref_${uid}" placeholder="Reference / Trans ID">
+                                <input type="number" class="amount-input" id="pay_${uid}" placeholder="Amount (KES)" min="0">
+                                <button class="btn-primary update-pay-btn" data-uid="${uid}" data-adm="${admNo}" data-name="${studentName}">Submit for VC Approval</button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                }
+
+                // Attach payment submission listener routing to 'feeTransactions' for VC approval
+                document.querySelectorAll(".update-pay-btn").forEach(btn => {
+                    btn.addEventListener("click", async (e) => {
+                        const uid = e.target.getAttribute("data-uid");
+                        const admNo = e.target.getAttribute("data-adm");
+                        const name = e.target.getAttribute("data-name");
+
+                        const paymentMode = document.getElementById(`mode_${uid}`).value;
+                        const refNumber = document.getElementById(`ref_${uid}`).value.trim();
+                        const inputVal = document.getElementById(`pay_${uid}`).value.trim();
+
+                        if (!inputVal || Number(inputVal) <= 0) {
+                            alert("Please enter a valid payment amount.");
+                            return;
+                        }
+
+                        if (!refNumber) {
+                            alert("Please provide a payment reference number or transaction ID.");
+                            return;
+                        }
+
+                        try {
+                            await addDoc(collection(db, "feeTransactions"), {
+                                studentUid: uid,
+                                admissionNumber: admNo,
+                                studentName: name,
+                                amount: Number(inputVal),
+                                paymentMode: paymentMode,
+                                transactionCode: refNumber.toUpperCase(),
+                                status: "Pending VC Approval",
+                                submittedByAccountant: auth.currentUser.email,
+                                submittedAt: serverTimestamp()
+                            });
+
+                            alert(`Transaction submitted successfully!\n\nMode: ${paymentMode}\nRef: ${refNumber}\nAmount: KES ${Number(inputVal).toLocaleString()}\n\nIt is now pending approval from the Vice Chancellor before updating the student balance.`);
+                            
+                            document.getElementById(`ref_${uid}`).value = "";
+                            document.getElementById(`pay_${uid}`).value = "";
+                        } catch (err) {
+                            console.error("Error submitting transaction for VC approval:", err);
+                            alert(`Error: ${err.message}`);
+                        }
+                    });
+                });
+
+            } catch (err) {
+                console.error("Error loading financial accounts:", err);
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--danger); padding: 2rem;">Failed to load student financial records.</td></tr>`;
+            }
+        }
+
+        function loadAccountantPendingTransactions() {
+            const tbody = document.getElementById("pendingTxnsAccountantTable");
+            if (!tbody) return;
+
+            const q = query(collection(db, "feeTransactions"), where("status", "==", "Pending VC Approval"));
+
+            onSnapshot(q, (snap) => {
+                if (snap.empty) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No pending transactions in the queue.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                snap.forEach(docSnap => {
+                    const txn = docSnap.data();
+                    const dateStr = txn.submittedAt?.toDate ? txn.submittedAt.toDate().toLocaleString() : "Recently";
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${dateStr}</td>
+                        <td><strong>${txn.admissionNumber || 'N/A'}</strong></td>
+                        <td>${txn.studentName || 'Student'}</td>
+                        <td>${txn.paymentMode || 'M-Pesa'}</td>
+                        <td><code style="background: #F1F5F9; padding: 0.2rem 0.4rem; border-radius: 4px; font-weight: 600;">${txn.transactionCode}</code></td>
+                        <td><strong>KES ${Number(txn.amount).toLocaleString()}</strong></td>
+                        <td><span style="color: var(--warning); font-weight: 600; background: #FEF3C7; padding: 0.2rem 0.5rem; border-radius: 4px;">Pending VC Approval</span></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            });
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

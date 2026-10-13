@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Classes & Students | Elimu Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --danger: #DC2626;
+            --warning: #D97706;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+        }
+
+        .sidebar-nav a.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            height: 70px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .content-body {
+            padding: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .class-card {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .class-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .class-meta {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #F8FAFC;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>Teacher Portal</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="teacher-dashboard.html">Dashboard</a>
+                <a href="teacher-classes.html" class="active">My Classes & Units</a>
+                 <a href="teacher-attendance.html" class="active">Class Attendance</a>
+                <a href="teacher-marks.html">Enter & Grade Marks</a>
+                <a href="teacher-materials.html">Learning Materials</a>
+                <a href="teacher-timetable.html">Teaching Schedule</a>
+                <a href="#" id="logoutBtn" style="margin-top: auto; color: var(--danger);">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-title">
+                    <h1>My Assigned Classes & Student Rosters</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Assigned Classes Cards Container -->
+                <div class="card">
+                    <div class="card-title">Assigned Teaching Units</div>
+                    <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        Select a class to view its roster and enrolled students.
+                    </p>
+                    <div class="classes-grid" id="classesGrid">
+                        <div style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 2rem;">Loading assigned classes...</div>
+                    </div>
+                </div>
+
+                <!-- Student Roster Container (Dynamic) -->
+                <div class="card" id="rosterCard" style="display: none;">
+                    <div class="card-title">Student Roster for: <span id="selectedClassNameDisplay" style="color: var(--primary);">Class</span></div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Admission No.</th>
+                                    <th>Student Name</th>
+                                    <th>Email / Contact</th>
+                                    <th>Registered Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentRosterTableBody">
+                                <tr>
+                                    <td colspan="4" style="text-align: center; color: var(--text-muted);">Select a class above to view students.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <!-- Firebase SDK & Module Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f",
+            measurementId: "G-DT8VYBS3DV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let teacherFullName = "";
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            try {
+                let teacherDoc = await getDoc(doc(db, "teachers", user.uid));
+                if (!teacherDoc.exists()) {
+                    teacherDoc = await getDoc(doc(db, "users", user.uid));
+                }
+
+                if (teacherDoc.exists()) {
+                    const data = teacherDoc.data();
+                    teacherFullName = data.fullName || data.name || `${data.firstName || ''} ${data.lastName || ''}`.trim() || "Instructor";
+                } else {
+                    teacherFullName = user.displayName || "Instructor";
+                }
+
+                loadTeacherClassesAndUnits(teacherFullName, user.uid);
+            } catch (err) {
+                console.error("Error loading teacher profile:", err);
+            }
+        });
+
+        async function loadTeacherClassesAndUnits(name, uid) {
+            const grid = document.getElementById("classesGrid");
+
+            try {
+                let assignments = [];
+
+                // 1. Try fetching from timetable first
+                try {
+                    const timetableSnap = await getDocs(collection(db, "timetable"));
+                    timetableSnap.forEach(d => {
+                        const t = d.data();
+                        const tName = (t.teacher || t.teacherName || t.instructor || "").trim();
+                        // Match by name or UID, or show all if none specifically restricted
+                        if (!tName || tName.toLowerCase() === name.toLowerCase() || t.teacherUid === uid) {
+                            assignments.push({
+                                className: t.className || t.class || "General Class",
+                                subjectName: t.subject || t.name || "Assigned Unit",
+                                schedule: `${t.day || 'Schedule TBA'} • ${t.time || 'Time TBA'}`
+                            });
+                        }
+                    });
+                } catch (e) {
+                    console.warn("Timetable collection check skipped.");
+                }
+
+                // 2. If no timetable entries match, fetch global classes and subjects so the lecturer can pick/view any unit
+                if (assignments.length === 0) {
+                    const classesList = [];
+                    const subjectsList = [];
+
+                    try {
+                        const classesSnap = await getDocs(collection(db, "classes"));
+                        classesSnap.forEach(d => {
+                            const c = d.data();
+                            if (c.className || c.name) classesList.push(c.className || c.name);
+                        });
+                    } catch (e) {}
+
+                    if (classesList.length === 0) {
+                        // Fallback to distinct classes from students collection
+                        const studentsSnap = await getDocs(collection(db, "students"));
+                        studentsSnap.forEach(d => {
+                            const s = d.data();
+                            const cl = s.className || s.grade;
+                            if (cl && !classesList.includes(cl)) classesList.push(cl);
+                        });
+                    }
+
+                    try {
+                        const subjectsSnap = await getDocs(collection(db, "subjects"));
+                        subjectsSnap.forEach(d => {
+                            const sub = d.data();
+                            const sName = sub.subjectName || sub.name || sub.title;
+                            if (sName) subjectsList.push(sName);
+                        });
+                    } catch (e) {}
+
+                    // Generate cross-product or default cards for available classes/subjects
+                    if (classesList.length > 0 && subjectsList.length > 0) {
+                        for (const cls of classesList) {
+                            for (const sub of subjectsList) {
+                                assignments.push({
+                                className: cls,
+                                subjectName: sub,
+                                schedule: "Standard Term Schedule"
+                            });
+                            }
+                        }
+                    } else if (classesList.length > 0) {
+                        for (const cls of classesList) {
+                            assignments.push({
+                                className: cls,
+                                subjectName: "General Unit",
+                                schedule: "Standard Term Schedule"
+                            });
+                        }
+                    }
+                }
+
+                if (assignments.length === 0) {
+                    grid.innerHTML = `<div style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 2rem;">No classes or units found in the system. Please add classes and subjects via admin or timetable.</div>`;
+                    return;
+                }
+
+                grid.innerHTML = "";
+                assignments.forEach(item => {
+                    const card = document.createElement("div");
+                    card.className = "class-card";
+                    card.innerHTML = `
+                        <div class="class-title">${item.subjectName}</div>
+                        <div class="class-meta">
+                            <span>Class/Grade: <strong>${item.className}</strong></span>
+                            <span>Schedule: ${item.schedule}</span>
+                        </div>
+                        <button class="btn-primary view-roster-btn" data-classname="${item.className}" data-subject="${item.subjectName}">View Student Roster</button>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                // Attach click listeners to view rosters
+                document.querySelectorAll(".view-roster-btn").forEach(btn => {
+                    btn.addEventListener("click", async (e) => {
+                        const className = e.target.getAttribute("data-classname");
+                        const subjectName = e.target.getAttribute("data-subject");
+                        await loadStudentRoster(className, subjectName);
+                    });
+                });
+
+            } catch (err) {
+                console.error("Error loading classes:", err);
+                grid.innerHTML = `<div style="color: var(--danger); grid-column: 1 / -1; text-align: center;">Failed to load classes.</div>`;
+            }
+        }
+
+        async function loadStudentRoster(className, subjectName) {
+            const rosterCard = document.getElementById("rosterCard");
+            const displayName = document.getElementById("selectedClassNameDisplay");
+            const tbody = document.getElementById("studentRosterTableBody");
+
+            rosterCard.style.display = "block";
+            displayName.textContent = `${className} (${subjectName})`;
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading student roster...</td></tr>`;
+
+            try {
+                const studentsSnap = await getDocs(collection(db, "students"));
+                const rosterStudents = [];
+
+                studentsSnap.forEach(d => {
+                    const s = d.data();
+                    // Log student keys and data to your browser F12 console to inspect exact property names
+                    console.log("Student Document Data:", s);
+
+                    const sClass = (s.className || s.grade || s.class || "").trim();
+                    if (sClass.toLowerCase() === className.toLowerCase()) {
+                        rosterStudents.push(s);
+                    }
+                });
+
+                if (rosterStudents.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No students registered under ${className} yet.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                rosterStudents.forEach(student => {
+                    // Comprehensive fallback covering any potential naming convention
+                    const admNo = student.admissionNumber || 
+                                  student.admissionNo || 
+                                  student.admNo || 
+                                  student.admission || 
+                                  student.adm || 
+                                  student.regNumber || 
+                                  student.regNo || 
+                                  student.studentId || 
+                                  student.idNumber || 
+                                  student.number || 
+                                  student.studentNumber || 
+                                  d.id.substring(0, 8) || // Fallback to short document ID if no field matches
+                                  "N/A";
+
+                    const studentName = student.fullName || student.name || `${student.firstName || ''} ${student.lastName || ''}`.trim() || "Unknown Student";
+                    const email = student.email || "No email provided";
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td><strong>${admNo}</strong></td>
+                        <td>${studentName}</td>
+                        <td>${email}</td>
+                        <td><span style="color: var(--success); font-weight: 600;">Enrolled</span></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+            } catch (err) {
+                console.error("Error loading student roster:", err);
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--danger); padding: 1.5rem;">Failed to load student roster.</td></tr>`;
+            }
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

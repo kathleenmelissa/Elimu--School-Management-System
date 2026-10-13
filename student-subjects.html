@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Registration & Dropping | Elimu Student Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --danger: #DC2626;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+        }
+
+        .sidebar-nav a.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            height: 70px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .content-body {
+            padding: 2rem;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .subject-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .subject-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .subject-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .subject-name {
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 1rem;
+        }
+
+        .subject-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .teacher-tag {
+            color: var(--secondary);
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>Student Portal</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="student-dashboard.html">Dashboard</a>
+                <a href="student-subjects.html" class="active">Register Units</a>
+                <a href="student-supplementary.html" class="active">Supplementary Registration</a>
+                <a href="student-dorms.html">Hostel Booking</a>
+                <a href="student-examcard.html" class="active">Exam Card</a>
+                <a href="student-timetable.html">My Timetable</a>
+                <a href="student-attendance.html" class="active"> Attendance</a>
+                <a href="student-materials.html">Learning Materials</a>
+                <a href="student-results.html">Exam Results</a>
+                <a href="#" id="logoutBtn" style="margin-top: auto; color: var(--danger);">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-title">
+                    <h1>Subject Registration & Dropping</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <div class="card">
+                    <div class="card-title">Manage Units for <span id="gradeTitleDisplay">Your Class</span></div>
+                    <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        Check units you want to register for, or uncheck any unit you want to <strong>drop</strong>. Click save when you're finished to update your schedule and term fees.
+                    </p>
+
+                    <form id="subjectRegForm">
+                        <div class="subject-list" id="subjectsContainer">
+                            <div style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading available subjects...</div>
+                        </div>
+                        <button type="submit" class="btn-primary" id="saveSubjectsBtn">Save Changes & Update Term Fees</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Module Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f",
+            measurementId: "G-DT8VYBS3DV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const FEE_PER_UNIT = 10000; // KES 10,000 per registered unit
+        let currentUserUid = null;
+        let studentClass = null;
+        let studentAdmissionNo = "";
+        let studentName = "";
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+            currentUserUid = user.uid;
+
+            try {
+                const studentSnap = await getDoc(doc(db, "students", user.uid));
+                if (!studentSnap.exists()) {
+                    alert("Student profile not found.");
+                    return;
+                }
+                const studentData = studentSnap.data();
+                studentClass = studentData.className || "Form 1";
+                studentAdmissionNo = studentData.admissionNumber || studentData.admissionNo || studentData.admNo || studentData.regNumber || "N/A";
+                studentName = studentData.fullName || studentData.name || "Student";
+
+                document.getElementById("gradeTitleDisplay").textContent = studentClass;
+
+                loadSubjectsForManagement(studentClass, user.uid);
+            } catch (err) {
+                console.error("Error checking auth:", err);
+            }
+        });
+
+        async function loadSubjectsForManagement(className, studentUid) {
+            const container = document.getElementById("subjectsContainer");
+            
+            try {
+                const regSnap = await getDoc(doc(db, "studentSubjects", studentUid));
+                const registeredSubjects = regSnap.exists() ? (regSnap.data().selectedSubjects || []) : [];
+
+                const [timetableSnap, subjectsSnap, teachersSnap] = await Promise.all([
+                    getDocs(collection(db, "timetable")),
+                    getDocs(collection(db, "subjects")),
+                    getDocs(collection(db, "teachers")).catch(() => ({ forEach: () => {} }))
+                ]);
+
+                const teacherMap = {};
+                teachersSnap.forEach(docSnap => {
+                    const t = docSnap.data();
+                    const fullName = t.fullName || t.name || `${t.firstName || ''} ${t.lastName || ''}`.trim();
+                    if (!fullName) return;
+
+                    if (Array.isArray(t.subjects)) {
+                        t.subjects.forEach(sub => {
+                            if (typeof sub === 'string') {
+                                teacherMap[sub.trim().toLowerCase()] = fullName;
+                            } else if (sub && sub.name) {
+                                teacherMap[sub.name.trim().toLowerCase()] = fullName;
+                            }
+                        });
+                    }
+                    if (t.subject) {
+                        teacherMap[t.subject.trim().toLowerCase()] = fullName;
+                    }
+                });
+
+                timetableSnap.forEach(docSnap => {
+                    const t = docSnap.data();
+                    const tClass = (t.className || t.class || "").trim();
+                    const subName = (t.subject || t.name || t.title || "").trim();
+                    const teacherVal = t.teacher || t.teacherName || t.instructor || t.lecturer || t.staffName;
+
+                    if (subName && teacherVal) {
+                        const subKey = subName.toLowerCase();
+                        teacherMap[subKey] = teacherVal;
+                        if (tClass) {
+                            teacherMap[`${tClass.toLowerCase()}_${subKey}`] = teacherVal;
+                        }
+                    }
+                });
+
+                subjectsSnap.forEach(docSnap => {
+                    const sub = docSnap.data();
+                    const subName = (sub.subjectName || sub.name || sub.title || "").trim();
+                    const teacherVal = sub.teacher || sub.teacherName || sub.instructor;
+                    if (subName && teacherVal) {
+                        teacherMap[subName.toLowerCase()] = teacherVal;
+                    }
+                });
+
+                container.innerHTML = "";
+                let count = 0;
+
+                subjectsSnap.forEach(docSnap => {
+                    const sub = docSnap.data();
+                    const subClass = (sub.className || sub.class || "").trim();
+                    
+                    if (subClass && className && subClass.toLowerCase() !== className.toLowerCase()) {
+                        return;
+                    }
+                    
+                    const subName = sub.subjectName || sub.name || sub.title;
+                    if (!subName) return;
+                    count++;
+
+                    const subLower = subName.trim().toLowerCase();
+                    const classSubKey = className ? `${className.toLowerCase()}_${subLower}` : '';
+
+                    const assignedTeacher = sub.teacher || sub.teacherName || sub.instructor || 
+                                           (classSubKey ? teacherMap[classSubKey] : null) || 
+                                           teacherMap[subLower] || 
+                                           "Not Assigned";
+
+                    const isChecked = registeredSubjects.includes(subName);
+
+                    const div = document.createElement("div");
+                    div.className = "subject-item";
+                    div.innerHTML = `
+                        <div class="subject-info">
+                            <span class="subject-name">${subName}</span>
+                            <div class="subject-meta">
+                                <span class="teacher-tag">Teacher: <strong>${assignedTeacher}</strong></span>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="checkbox" name="subjectCheck" value="${subName}" ${isChecked ? 'checked' : ''}>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+
+                if (count === 0) {
+                    container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No subjects configured for ${className} yet.</div>`;
+                }
+            } catch (err) {
+                console.error("Error loading subjects:", err);
+                container.innerHTML = `<div style="color: var(--danger); text-align: center; padding: 1.5rem;">Failed to load subjects.</div>`;
+            }
+        }
+
+        // Handle Form Submission (Registering & Dropping units)
+        const form = document.getElementById("subjectRegForm");
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const saveBtn = document.getElementById("saveSubjectsBtn");
+            saveBtn.disabled = true;
+            saveBtn.textContent = "Updating Selections & Fees...";
+
+            try {
+                const checkboxes = document.querySelectorAll('input[name="subjectCheck"]');
+                const selectedSubjects = [];
+
+                checkboxes.forEach(cb => {
+                    if (cb.checked) {
+                        selectedSubjects.push(cb.value);
+                    }
+                });
+
+                // 1. Save selected units to studentSubjects collection
+                await setDoc(doc(db, "studentSubjects", currentUserUid), {
+                    studentUid: currentUserUid,
+                    admissionNumber: studentAdmissionNo,
+                    studentName: studentName,
+                    className: studentClass,
+                    selectedSubjects: selectedSubjects,
+                    updatedAt: serverTimestamp()
+                }, { merge: true });
+
+                // 2. Compute Tuition Fee based on unit count (KES 10,000 per unit)
+                const unitsCount = selectedSubjects.length;
+                const tuitionFee = unitsCount * FEE_PER_UNIT;
+
+                // 3. Fetch existing account balance to preserve hostel fee and amount paid
+                const balanceRef = doc(db, "studentAccountBalances", currentUserUid);
+                const balSnap = await getDoc(balanceRef);
+                
+                let hostelFee = 0;
+                let amountPaid = 0;
+                if (balSnap.exists()) {
+                    const balData = balSnap.data();
+                    hostelFee = Number(balData.hostelFee || 0);
+                    amountPaid = Number(balData.amountPaid || 0);
+                } else {
+                    // Fallback check in studentDormBookings
+                    const dormSnap = await getDoc(doc(db, "studentDormBookings", currentUserUid));
+                    if (dormSnap.exists()) {
+                        hostelFee = Number(dormSnap.data().feeAmount || 0);
+                    }
+                }
+
+                const totalBill = tuitionFee + hostelFee;
+                const feeBalance = totalBill - amountPaid;
+
+                // 4. Update accountant-synchronized studentAccountBalances with precise unit calculation
+                await setDoc(balanceRef, {
+                    studentUid: currentUserUid,
+                    admissionNumber: studentAdmissionNo,
+                    studentName: studentName,
+                    className: studentClass,
+                    totalBill: totalBill,
+                    amountPaid: amountPaid,
+                    balance: feeBalance,
+                    tuitionFee: tuitionFee,
+                    hostelFee: hostelFee,
+                    updatedAt: serverTimestamp()
+                }, { merge: true });
+
+                alert(`Subject updates saved successfully!\n\nRegistered Units: ${unitsCount} (${unitsCount} × KES 10,000)\nTuition Fee: KES ${tuitionFee.toLocaleString()}\nTotal Bill: KES ${totalBill.toLocaleString()}`);
+                
+                loadSubjectsForManagement(studentClass, currentUserUid);
+            } catch (err) {
+                console.error("Error updating subjects & fees:", err);
+                alert(`Error: ${err.message}`);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = "Save Changes & Update Term Fees";
+            }
+        });
+
+        document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

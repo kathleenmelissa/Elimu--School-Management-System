@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplementary Registration | Elimu Student Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --danger: #DC2626;
+            --warning: #D97706;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+        }
+
+        .sidebar-nav a.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            height: 70px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .content-body {
+            padding: 2rem;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background-color: #F8FAFC;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .badge-supp {
+            background-color: #FEF3C7;
+            color: #B45309;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>Student Portal</span>
+            </div>
+            <nav class="sidebar-nav">
+                 <a href="student-dashboard.html">Dashboard</a>
+                <a href="student-subjects.html">Register Units</a>
+                <a href="student-supplementary.html" class="active">Supplementary Registration</a>
+                <a href="student-timetable.html">My Timetable</a>
+                <a href="student-examcard.html" class="active">Exam Card</a>
+                <a href="student-attendance.html" class="active"> Attendance</a>
+                <a href="student-dorms.html" class="active">Hostel Booking</a>
+                <a href="student-materials.html">Learning Materials</a>
+                <a href="student-results.html">Exam Results</a>
+                <a href="#" id="logoutBtn" style="margin-top: auto; color: var(--danger);">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-title">
+                    <h1>Supplementary Examination Registration</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Register Supplementary Card -->
+                <div class="card">
+                    <div class="card-title">Eligible Failed Units for Supplementary Registration</div>
+                    <div class="card-desc">
+                        Register for supplementary exams for units previously failed. Supplementary exam registration is <strong>Free (KES 0)</strong>. Note: If you fail a supplementary exam, it will subsequently be billed as a normal retake unit (KES 10,000).
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Unit Code</th>
+                                    <th>Unit Name</th>
+                                    <th>Previous Grade / Score</th>
+                                    <th>Supplementary Fee</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="eligibleUnitsTable">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading student exam performance...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Registered Supplementary Units Card -->
+                <div class="card">
+                    <div class="card-title">My Registered Supplementary Units & Exams</div>
+                    <div class="card-desc">Units currently booked and scheduled as supplementary units.</div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date Registered</th>
+                                    <th>Unit Code</th>
+                                    <th>Unit Name</th>
+                                    <th>Status Label</th>
+                                    <th>Fee Charged</th>
+                                </tr>
+                            </thead>
+                            <tbody id="registeredSuppTable">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading booked supplementary units...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUserUid = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+            currentUserUid = user.uid;
+            loadEligibleAndRegisteredSupplementaries();
+        });
+
+        async function loadEligibleAndRegisteredSupplementaries() {
+            const eligibleTbody = document.getElementById("eligibleUnitsTable");
+            const registeredTbody = document.getElementById("registeredSuppTable");
+
+            try {
+                // 1. Fetch Subjects lookup map
+                const subjectsMap = {};
+                try {
+                    const subjectsSnap = await getDocs(collection(db, "subjects"));
+                    subjectsSnap.forEach(d => {
+                        const data = d.data();
+                        const code = data.code || data.subjectCode || data.unitCode || d.id;
+                        const name = data.name || data.title || data.subjectName || code;
+                        subjectsMap[d.id] = { code: code, name: name };
+                        subjectsMap[code] = { code: code, name: name };
+                        if (name) subjectsMap[name.toLowerCase()] = { code: code, name: name };
+                    });
+                } catch (e) {
+                    console.warn("Subjects lookup skipped:", e);
+                }
+
+                // 2. Scan collections for failed units with clean field separation
+                const failedUnitsMap = {};
+
+                const checkResultsCollection = async (collName) => {
+                    try {
+                        const snap = await getDocs(collection(db, collName));
+                        snap.forEach(d => {
+                            const r = d.data();
+                            const matchesStudent = (r.studentUid === currentUserUid) || (r.studentId === currentUserUid) || (d.id.includes(currentUserUid));
+                            
+                            if (matchesStudent) {
+                                const grade = String(r.grade || "").toUpperCase().trim();
+                                const score = Number(r.marks || r.score || r.mark || 100);
+                                const isFail = grade === 'F' || grade === 'E' || (score < 40 && score > 0);
+
+                                if (isFail) {
+                                    let rawCode = r.unitCode || r.subjectCode || r.code || r.subjectId || '';
+                                    let rawName = r.unitName || r.subjectName || r.subject || r.name || '';
+
+                                    // If rawCode accidentally got assigned a name like "Physics"
+                                    if (rawCode && !/\d/.test(rawCode) && rawCode.length > 4) {
+                                        if (!rawName) rawName = rawCode;
+                                        rawCode = "";
+                                    }
+
+                                    // Lookup via subjects map if name exists
+                                    if (rawName && subjectsMap[rawName.toLowerCase()]) {
+                                        rawCode = subjectsMap[rawName.toLowerCase()].code;
+                                        rawName = subjectsMap[rawName.toLowerCase()].name;
+                                    } else if (rawCode && subjectsMap[rawCode]) {
+                                        rawName = subjectsMap[rawCode].name;
+                                        rawCode = subjectsMap[rawCode].code;
+                                    }
+
+                                    const finalCode = (rawCode && !rawCode.includes(currentUserUid)) ? rawCode : "UNIT-" + Math.floor(Math.random() * 899 + 100);
+                                    const finalName = rawName || "Academic Unit";
+
+                                    failedUnitsMap[finalCode] = {
+                                        code: finalCode,
+                                        name: finalName,
+                                        grade: grade || 'F',
+                                        score: score
+                                    };
+                                }
+                            }
+                        });
+                    } catch (err) {
+                        console.warn(`Could not read ${collName}:`, err);
+                    }
+                };
+
+                await checkResultsCollection("examResults");
+                await checkResultsCollection("results");
+
+                const failedUnits = Object.values(failedUnitsMap);
+
+                // 3. Fetch registered supplementary units
+                const registeredList = [];
+                const registeredCodes = new Set();
+
+                try {
+                    const suppSnap = await getDocs(collection(db, "studentSupplementaries"));
+                    suppSnap.forEach(d => {
+                        const sData = d.data();
+                        if (sData.studentUid === currentUserUid || d.id.startsWith(currentUserUid)) {
+                            registeredCodes.add(sData.unitCode);
+                            registeredList.push(sData);
+                        }
+                    });
+                } catch (e) {
+                    console.warn("Could not read studentSupplementaries:", e);
+                }
+
+                // Render Eligible Failed Units Table
+                eligibleTbody.innerHTML = "";
+                const availableToRegister = failedUnits.filter(u => !registeredCodes.has(u.code));
+
+                if (availableToRegister.length === 0) {
+                    eligibleTbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No unbooked failed units found for your account. All cleared or already registered!</td></tr>`;
+                } else {
+                    availableToRegister.forEach(unit => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td><strong>${unit.code}</strong></td>
+                            <td>${unit.name}</td>
+                            <td><span style="color: var(--danger); font-weight: 700;">Grade ${unit.grade} (${unit.score} Marks)</span></td>
+                            <td style="color: var(--success); font-weight: 600;">Free (KES 0)</td>
+                            <td>
+                                <button class="btn-primary register-supp-btn" data-code="${unit.code}" data-name="${unit.name}">Register Supplementary</button>
+                            </td>
+                        `;
+                        eligibleTbody.appendChild(row);
+                    });
+                }
+
+                // Render Registered Supplementaries Table
+                if (registeredList.length === 0) {
+                    registeredTbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">You have not registered for any supplementary units yet.</td></tr>`;
+                } else {
+                    registeredTbody.innerHTML = "";
+                    registeredList.forEach(item => {
+                        const dateStr = item.registeredAt?.toDate ? item.registeredAt.toDate().toLocaleDateString() : 'Recent';
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${dateStr}</td>
+                            <td><strong>${item.unitCode}</strong></td>
+                            <td>${item.unitName}</td>
+                            <td><span class="badge-supp">Supplementary Unit</span></td>
+                            <td style="font-weight: 600; color: var(--success);">KES 0 (Free)</td>
+                        `;
+                        registeredTbody.appendChild(row);
+                    });
+                }
+
+                // Attach Registration Click Listeners
+                document.querySelectorAll(".register-supp-btn").forEach(btn => {
+                    btn.addEventListener("click", async (e) => {
+                        const unitCode = e.target.getAttribute("data-code");
+                        const unitName = e.target.getAttribute("data-name");
+
+                        if (!confirm(`Register for supplementary exam in ${unitName} (${unitCode})?\n\nSupplementary registration is free (KES 0).`)) return;
+
+                        try {
+                            await setDoc(doc(db, "studentSupplementaries", `${currentUserUid}_${unitCode}`), {
+                                studentUid: currentUserUid,
+                                unitCode: unitCode,
+                                unitName: unitName,
+                                type: "Supplementary Unit",
+                                feeCharged: 0,
+                                status: "Registered",
+                                registeredAt: serverTimestamp()
+                            });
+
+                            alert(`Successfully registered for ${unitName} supplementary examination!`);
+                            loadEligibleAndRegisteredSupplementaries();
+                        } catch (err) {
+                            console.error("Error booking supplementary:", err);
+                            alert(`Error: ${err.message}`);
+                        }
+                    });
+                });
+
+            } catch (err) {
+                console.error("Error loading supplementary data:", err);
+                eligibleTbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger); padding: 1.5rem;">Failed to load supplementary units. Please check your network or try again.</td></tr>`;
+            }
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

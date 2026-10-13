@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wi-Fi Attendance | Elimu Student Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --danger: #DC2626;
+            --warning: #D97706;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+        }
+
+        .sidebar-nav a.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            height: 70px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .content-body {
+            padding: 2rem;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: white;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .network-status {
+            padding: 1rem;
+            border-radius: var(--radius);
+            background: #F1F5F9;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background-color: #F8FAFC;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.85rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 0.85rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>Student Portal</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="student-dashboard.html">Dashboard</a>
+                <a href="student-subjects.html">Register Units</a>
+                <a href="student-supplementary.html">Supplementary Registration</a>
+                <a href="student-attendance.html" class="active">Attendance</a>
+                <a href="student-timetable.html">My Timetable</a>
+                <a href="student-exam-card.html">Exam Card</a>
+                <a href="student-dorms.html">Hostel Booking</a>
+                <a href="student-materials.html">Learning Materials</a>
+                <a href="student-results.html">Exam Results</a>
+                <a href="#" id="logoutBtn" style="margin-top: auto; color: var(--danger);">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-title">
+                    <h1>Class Attendance</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Network Status Banner -->
+                <div class="network-status" id="networkStatusBanner">
+                    <span>Checking network and device binding...</span>
+                    <strong id="ipDisplay">Detecting IP...</strong>
+                </div>
+
+                <!-- Mark Attendance Card -->
+                <div class="card">
+                    <div class="card-title">Mark Attendance for Today</div>
+                    <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                        Attendance requires connection to the <strong>School Wi-Fi Network</strong> and your <strong>Registered Device IP</strong>. Select your unit below and submit.
+                    </p>
+
+                    <form id="attendanceForm">
+                        <div class="form-group">
+                            <label for="unitSelect">Select Unit / Subject</label>
+                            <select id="unitSelect" required>
+                                <option value="">-- Loading Registered Units --</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary" id="markAttendanceBtn">Mark Present</button>
+                    </form>
+                </div>
+
+                <!-- Attendance History -->
+                <div class="card">
+                    <div class="card-title">My Attendance History</div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Subject</th>
+                                    <th>Device IP</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceHistoryTable">
+                                <tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading history...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Module Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f",
+            measurementId: "G-DT8VYBS3DV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let studentData = {};
+        let currentClientIp = "";
+        let allowedSchoolIp = "";
+        let registeredDeviceIp = "";
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+            currentUser = user;
+
+            try {
+                // 1. Fetch student profile including device IP binding
+                const studentSnap = await getDoc(doc(db, "students", user.uid));
+                if (studentSnap.exists()) {
+                    studentData = studentSnap.data();
+                    registeredDeviceIp = (studentData.deviceIp || studentData.registeredIp || "").trim();
+                }
+
+                // 2. Verify School Network & Device IP Binding
+                await verifySchoolNetworkAndDevice();
+
+                // 3. Load registered units into dropdown
+                await loadRegisteredUnits(user.uid);
+
+                // 4. Load attendance history
+                await loadAttendanceHistory(user.uid);
+
+            } catch (err) {
+                console.error("Initialization error:", err);
+            }
+        });
+
+        async function loadRegisteredUnits(uid) {
+            const select = document.getElementById("unitSelect");
+            select.innerHTML = `<option value="">-- Choose Unit --</option>`;
+
+            try {
+                const regSnap = await getDoc(doc(db, "studentSubjects", uid));
+                let rawList = [];
+                if (regSnap.exists()) {
+                    const data = regSnap.data();
+                    rawList = data.selectedSubjects || data.units || data.subjects || [];
+                }
+
+                if (rawList.length === 0) {
+                    const studentSnap = await getDoc(doc(db, "students", uid));
+                    if (studentSnap.exists()) {
+                        const sData = studentSnap.data();
+                        rawList = sData.selectedSubjects || sData.units || sData.subjects || [];
+                    }
+                }
+
+                const registeredList = [...new Set(rawList.map(s => {
+                    if (typeof s === 'string') return s.trim();
+                    if (s && s.name) return s.name.trim();
+                    if (s && s.subjectName) return s.subjectName.trim();
+                    return '';
+                }).filter(Boolean))];
+
+                if (registeredList.length === 0) {
+                    select.innerHTML = `<option value="">No registered units found. Please register subjects first.</option>`;
+                    return;
+                }
+
+                registeredList.forEach(unitName => {
+                    const opt = document.createElement("option");
+                    opt.value = unitName;
+                    opt.textContent = unitName;
+                    select.appendChild(opt);
+                });
+            } catch (err) {
+                console.error("Error loading units:", err);
+                select.innerHTML = `<option value="">Error loading units</option>`;
+            }
+        }
+
+        async function verifySchoolNetworkAndDevice() {
+            const banner = document.getElementById("networkStatusBanner");
+            const ipDisplay = document.getElementById("ipDisplay");
+            const markBtn = document.getElementById("markAttendanceBtn");
+
+            try {
+                // 1. Fetch allowed school network IP from Firestore settings
+                const configSnap = await getDoc(doc(db, "settings", "network"));
+                if (configSnap.exists()) {
+                    allowedSchoolIp = (configSnap.data().schoolIp || "").trim();
+                }
+
+                // 2. Fetch client's current public IP via ipify
+                const response = await fetch("https://api.ipify.org?format=json");
+                const data = await response.json();
+                currentClientIp = (data.ip || "").trim();
+
+                ipDisplay.textContent = `Your IP: ${currentClientIp}`;
+
+                // 3. Strict Dual-Layer Verification (School Wi-Fi IP + Registered Device IP)
+                if (!allowedSchoolIp) {
+                    banner.style.background = "#FEF3C7";
+                    banner.style.color = "#92400E";
+                    banner.innerHTML = `<span><strong>Warning:</strong> School Wi-Fi IP is not configured in Firestore settings.</span>`;
+                    markBtn.disabled = true;
+                } else if (currentClientIp !== allowedSchoolIp) {
+                    banner.style.background = "#FEE2E2";
+                    banner.style.color = "#991B1B";
+                    banner.innerHTML = `<span><strong>Access Denied:</strong> You are not connected to the School Wi-Fi network.</span> <strong>IP: ${currentClientIp}</strong>`;
+                    markBtn.disabled = true;
+                    markBtn.style.opacity = "0.6";
+                    markBtn.style.cursor = "not-allowed";
+                } else if (!registeredDeviceIp) {
+                    banner.style.background = "#FEF3C7";
+                    banner.style.color = "#92400E";
+                    banner.innerHTML = `<span><strong>Device Unregistered:</strong> Your device IP is not bound. Please visit the admin office to register your device.</span>`;
+                    markBtn.disabled = true;
+                    markBtn.style.opacity = "0.6";
+                    markBtn.style.cursor = "not-allowed";
+                } else if (currentClientIp !== registeredDeviceIp) {
+                    banner.style.background = "#FEE2E2";
+                    banner.style.color = "#991B1B";
+                    banner.innerHTML = `<span><strong>Device Restricted:</strong> Attendance can only be marked from your registered device IP. Try again from the correct device.</span>`;
+                    markBtn.disabled = true;
+                    markBtn.style.opacity = "0.6";
+                    markBtn.style.cursor = "not-allowed";
+                } else {
+                    // Fully Verified (Matches School IP AND Registered Device IP)
+                    banner.style.background = "#DCFCE7";
+                    banner.style.color = "#166534";
+                    banner.innerHTML = `<span><strong>Verified:</strong> Connected to School Wi-Fi & Authorized Device.</span> <strong>IP: ${currentClientIp}</strong>`;
+                    markBtn.disabled = false;
+                    markBtn.style.opacity = "1";
+                    markBtn.style.cursor = "pointer";
+                }
+            } catch (err) {
+                console.error("Could not verify IP:", err);
+                banner.style.background = "#FEE2E2";
+                banner.style.color = "#991B1B";
+                banner.innerHTML = `<span><strong>Network Error:</strong> Could not verify your connection IP address.</span>`;
+                markBtn.disabled = true;
+            }
+        }
+
+        // Handle Attendance Submission with dual validation
+        document.getElementById("attendanceForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            if (currentClientIp !== allowedSchoolIp || currentClientIp !== registeredDeviceIp) {
+                alert("Security Error: Attendance requires both the School Wi-Fi network and your registered device IP.");
+                return;
+            }
+
+            const subject = document.getElementById("unitSelect").value;
+            if (!subject) {
+                alert("Please select a unit.");
+                return;
+            }
+
+            const admNo = studentData.admissionNumber || studentData.admissionNo || studentData.admNo || "N/A";
+            const name = studentData.fullName || studentData.name || "Student";
+            const todayDate = new Date().toISOString().split('T')[0];
+
+            try {
+                const q = query(
+                    collection(db, "attendance"),
+                    where("studentUid", "==", currentUser.uid),
+                    where("subject", "==", subject),
+                    where("dateStr", "==", todayDate)
+                );
+                const existingSnap = await getDocs(q);
+                if (!existingSnap.empty) {
+                    alert(`You have already marked attendance for ${subject} today.`);
+                    return;
+                }
+
+                await addDoc(collection(db, "attendance"), {
+                    studentUid: currentUser.uid,
+                    admissionNumber: admNo,
+                    studentName: name,
+                    subject: subject,
+                    dateStr: todayDate,
+                    ipAddress: currentClientIp,
+                    status: "Present",
+                    timestamp: serverTimestamp()
+                });
+
+                alert(`Attendance successfully marked for ${subject}!`);
+                loadAttendanceHistory(currentUser.uid);
+            } catch (err) {
+                console.error("Error marking attendance:", err);
+                alert(`Error: ${err.message}`);
+            }
+        });
+
+        async function loadAttendanceHistory(uid) {
+            const tbody = document.getElementById("attendanceHistoryTable");
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading history...</td></tr>`;
+
+            try {
+                const q = query(collection(db, "attendance"), where("studentUid", "==", uid));
+                const snap = await getDocs(q);
+
+                if (snap.empty) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No attendance records found.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                snap.forEach(docSnap => {
+                    const att = docSnap.data();
+                    const dateFormatted = att.timestamp?.toDate ? att.timestamp.toDate().toLocaleString() : att.dateStr;
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${dateFormatted}</td>
+                        <td><strong>${att.subject}</strong></td>
+                        <td><code>${att.ipAddress || 'N/A'}</code></td>
+                        <td><span style="color: var(--success); font-weight: 600;">${att.status}</span></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (err) {
+                console.error("Error loading attendance history:", err);
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--danger); padding: 1.5rem;">Failed to load history.</td></tr>`;
+            }
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

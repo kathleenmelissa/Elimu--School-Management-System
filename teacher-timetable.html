@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teaching Schedule | Elimu Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --danger: #DC2626;
+            --warning: #D97706;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+        }
+
+        .sidebar-nav a.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            height: 70px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .content-body {
+            padding: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #F8FAFC;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #E2E8F0;
+            color: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>Teacher Portal</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="teacher-dashboard.html">Dashboard</a>
+                <a href="teacher-classes.html">My Classes & Units</a>
+                 <a href="teacher-attendance.html" class="active">Class Attendance</a>
+                <a href="teacher-marks.html">Enter & Grade Marks</a>
+                <a href="teacher-materials.html">Learning Materials</a>
+                <a href="teacher-timetable.html" class="active">Teaching Schedule</a>
+                <a href="#" id="logoutBtn" style="margin-top: auto; color: var(--danger);">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-title">
+                    <h1>Weekly Teaching Timetable</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <div class="card">
+                    <div class="card-title">My Assigned Schedule</div>
+                    <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        Review your lecture days, times, and classroom assignments for the current academic term.
+                    </p>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Day of the Week</th>
+                                    <th>Time</th>
+                                    <th>Class / Grade</th>
+                                    <th>Subject / Unit</th>
+                                    <th>Room / Venue</th>
+                                </tr>
+                            </thead>
+                            <tbody id="timetableTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading teaching schedule...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ <!-- Firebase SDK & Module Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, getDocs, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f",
+            measurementId: "G-DT8VYBS3DV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let teacherFullName = "";
+        let teacherUid = "";
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+            teacherUid = user.uid;
+
+            try {
+                let teacherDoc = await getDoc(doc(db, "teachers", user.uid));
+                if (!teacherDoc.exists()) {
+                    teacherDoc = await getDoc(doc(db, "users", user.uid));
+                }
+
+                if (teacherDoc.exists()) {
+                    const data = teacherDoc.data();
+                    teacherFullName = data.fullName || data.name || `${data.firstName || ''} ${data.lastName || ''}`.trim() || "Instructor";
+                } else {
+                    teacherFullName = user.displayName || "Instructor";
+                }
+
+                // Load all global classes and subjects so lecturers can freely choose what to teach/grade
+                loadGlobalClassesAndSubjects();
+            } catch (err) {
+                console.error("Error loading teacher profile:", err);
+            }
+        });
+
+        async function loadGlobalClassesAndSubjects() {
+            const classSelect = document.getElementById("classSelect");
+            const subjectSelect = document.getElementById("subjectSelect");
+
+            try {
+                // 1. Fetch all classes from 'classes' or fallback to unique classes in 'students'
+                const classesSet = new Set();
+                try {
+                    const classesSnap = await getDocs(collection(db, "classes"));
+                    classesSnap.forEach(d => {
+                        const data = d.data();
+                        if (data.className || data.name) classesSet.add(data.className || data.name);
+                    });
+                } catch (e) {
+                    console.warn("Classes collection check skipped.");
+                }
+
+                // Fallback: extract from students if classes collection is empty
+                if (classesSet.size === 0) {
+                    const studentsSnap = await getDocs(collection(db, "students"));
+                    studentsSnap.forEach(d => {
+                        const s = d.data();
+                        if (s.className || s.grade) classesSet.add(s.className || s.grade);
+                    });
+                }
+
+                // 2. Fetch all subjects/units from 'subjects' collection
+                const subjectsSet = new Set();
+                try {
+                    const subjectsSnap = await getDocs(collection(db, "subjects"));
+                    subjectsSnap.forEach(d => {
+                        const data = d.data();
+                        if (data.subjectName || data.name || data.title) {
+                            subjectsSet.add(data.subjectName || data.name || data.title);
+                        }
+                    });
+                } catch (e) {
+                    console.warn("Subjects collection check skipped.");
+                }
+
+                // Fallback: extract unique subjects from timetable if subjects collection is empty
+                if (subjectsSet.size === 0) {
+                    const timetableSnap = await getDocs(collection(db, "timetable"));
+                    timetableSnap.forEach(d => {
+                        const t = d.data();
+                        if (t.subject || t.name) subjectsSet.add(t.subject || t.name);
+                    });
+                }
+
+                // Populate Class Dropdown
+                classSelect.innerHTML = `<option value="">-- Choose Class --</option>`;
+                classesSet.forEach(cls => {
+                    classSelect.innerHTML += `<option value="${cls}">${cls}</option>`;
+                });
+
+                // Populate Subject Dropdown
+                subjectSelect.innerHTML = `<option value="">-- Choose Unit --</option>`;
+                subjectsSet.forEach(sub => {
+                    subjectSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
+                });
+
+                // Auto-select query parameters if passed from dashboard URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const paramSubject = urlParams.get("subject");
+                const paramClass = urlParams.get("class");
+                if (paramClass) classSelect.value = paramClass;
+                if (paramSubject) subjectSelect.value = paramSubject;
+                if (paramClass && paramSubject) {
+                    loadGradingRoster(paramClass, paramSubject);
+                }
+
+            } catch (err) {
+                console.error("Error loading selection options:", err);
+            }
+        }
+
+        document.getElementById("loadRosterBtn").addEventListener("click", () => {
+            const className = document.getElementById("classSelect").value;
+            const subjectName = document.getElementById("subjectSelect").value;
+
+            if (!className || !subjectName) {
+                alert("Please select both a class and a subject unit.");
+                return;
+            }
+            loadGradingRoster(className, subjectName);
+        });
+
+        async function loadGradingRoster(className, subjectName) {
+            const gradingCard = document.getElementById("gradingCard");
+            const displayTitle = document.getElementById("activeClassUnitDisplay");
+            const tbody = document.getElementById("gradingTableBody");
+
+            gradingCard.style.display = "block";
+            displayTitle.textContent = `${className} — ${subjectName}`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading student roster and existing scores...</td></tr>`;
+
+            try {
+                // Fetch students in class
+                const studentsSnap = await getDocs(collection(db, "students"));
+                const students = [];
+                studentsSnap.forEach(d => {
+                    const s = d.data();
+                    const sClass = (s.className || s.grade || "").trim();
+                    if (sClass.toLowerCase() === className.toLowerCase()) {
+                        students.push({ id: d.id, ...s });
+                    }
+                });
+
+                // Fetch existing results for this subject to prepopulate inputs
+                const existingScores = {};
+                const resultsSnap = await getDocs(collection(db, "examResults"));
+                resultsSnap.forEach(d => {
+                    const r = d.data();
+                    if ((r.subject || r.unitName) === subjectName && (r.className || r.class) === className) {
+                        existingScores[r.studentUid || r.studentId] = r;
+                    }
+                });
+
+                if (students.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No students registered in ${className}.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                students.forEach(student => {
+                    const admNo = student.admissionNumber || student.admNo || "N/A";
+                    const studentName = student.fullName || student.name || `${student.firstName || ''} ${student.lastName || ''}`.trim() || "Student";
+                    const existingRecord = existingScores[student.id] || {};
+                    const currentScore = existingRecord.score !== undefined ? existingRecord.score : "";
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td><strong>${admNo}</strong></td>
+                        <td>${studentName}</td>
+                        <td>
+                            <input type="number" min="0" max="100" class="score-input" data-uid="${student.id}" data-adm="${admNo}" data-name="${studentName}" value="${currentScore}" placeholder="0-100">
+                        </td>
+                        <td class="grade-cell" id="grade_${student.id}">${existingRecord.grade || '-'}</td>
+                        <td class="remark-cell" id="remark_${student.id}">${existingRecord.remarks || '-'}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                // Attach live calculation listeners
+                document.querySelectorAll(".score-input").forEach(input => {
+                    input.addEventListener("input", (e) => {
+                        const uid = e.target.getAttribute("data-uid");
+                        const val = Number(e.target.value);
+                        const gradeCell = document.getElementById(`grade_${uid}`);
+                        const remarkCell = document.getElementById(`remark_${uid}`);
+
+                        if (e.target.value === "") {
+                            gradeCell.textContent = "-";
+                            remarkCell.textContent = "-";
+                            return;
+                        }
+
+                        gradeCell.textContent = calculateGrade(val);
+                        remarkCell.textContent = calculateRemark(val);
+                    });
+                    if (input.value !== "") {
+                        input.dispatchEvent(new Event("input"));
+                    }
+                });
+
+            } catch (err) {
+                console.error("Error loading grading roster:", err);
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger); padding: 1.5rem;">Failed to load roster.</td></tr>`;
+            }
+        }
+
+        function calculateGrade(score) {
+            if (score >= 70) return "A";
+            if (score >= 60) return "B";
+            if (score >= 50) return "C";
+            if (score >= 40) return "D";
+            return "E";
+        }
+
+        function calculateRemark(score) {
+            if (score >= 70) return "Excellent performance";
+            if (score >= 60) return "Good work, keep it up";
+            if (score >= 50) return "Satisfactory";
+            if (score >= 40) return "Needs improvement";
+            return "Fail / Retake required";
+        }
+
+        // Save All Marks Form Submission
+        document.getElementById("gradingForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const saveBtn = document.getElementById("saveMarksBtn");
+            saveBtn.disabled = true;
+            saveBtn.textContent = "Saving Grades to Database...";
+
+            const className = document.getElementById("classSelect").value;
+            const subjectName = document.getElementById("subjectSelect").value;
+            const scoreInputs = document.querySelectorAll(".score-input");
+
+            try {
+                let savedCount = 0;
+                for (const input of scoreInputs) {
+                    const studentUid = input.getAttribute("data-uid");
+                    const admissionNumber = input.getAttribute("data-adm");
+                    const studentName = input.getAttribute("data-name");
+                    const scoreVal = input.value.trim();
+
+                    if (scoreVal === "") continue;
+
+                    const score = Number(scoreVal);
+                    const grade = calculateGrade(score);
+                    const remarks = calculateRemark(score);
+
+                    const resultId = `${studentUid}_${subjectName.replace(/\s+/g, '_')}`;
+                    const resultRef = doc(db, "examResults", resultId);
+
+                    await setDoc(resultRef, {
+                        studentUid: studentUid,
+                        admissionNumber: admissionNumber,
+                        studentName: studentName,
+                        className: className,
+                        subject: subjectName,
+                        score: score,
+                        grade: grade,
+                        remarks: remarks,
+                        gradedBy: teacherUid,
+                        teacherName: teacherFullName,
+                        updatedAt: serverTimestamp()
+                    }, { merge: true });
+
+                    savedCount++;
+                }
+
+                alert(`Successfully saved exam results for ${savedCount} student(s)!`);
+                loadGradingRoster(className, subjectName);
+            } catch (err) {
+                console.error("Error saving exam results:", err);
+                alert(`Error saving marks: ${err.message}`);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = "Save All Exam Results";
+            }
+        });
+
+        document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Results | Elimu Student Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --danger: #DC2626;
+            --warning: #D97706;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+        }
+
+        .sidebar-nav a.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            height: 70px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .content-body {
+            padding: 2rem;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #F8FAFC;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success { background: #DCFCE7; color: #166534; }
+        .badge-warning { background: #FEF9C3; color: #854D0E; }
+        .badge-danger { background: #FEE2E2; color: #991B1B; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>Student Portal</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="student-dashboard.html">Dashboard</a>
+                <a href="student-subjects.html">Register Units</a>
+                <a href="student-supplementary.html" class="active">Supplementary Registration</a>
+                <a href="student-dorms.html" class="active">Hostel Booking</a>
+                <a href="student-timetable.html">My Timetable</a>
+                <a href="student-examcard.html" class="active">Exam Card</a>
+                <a href="student-attendance.html" class="active"> Attendance</a>
+                <a href="student-materials.html">Learning Materials</a>
+                <a href="student-results.html" class="active">Exam Results</a>
+                <a href="#" id="logoutBtn" style="margin-top: auto; color: var(--danger);">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-title">
+                    <h1>Academic Exam Results</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Summary Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Class</span>
+                        <span class="stat-value" id="studentClassVal">Loading...</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Units Graded</span>
+                        <span class="stat-value" id="unitsCountVal">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Average Score</span>
+                        <span class="stat-value" id="avgScoreVal">-</span>
+                    </div>
+                </div>
+
+                <!-- Results Table Card -->
+                <div class="card">
+                    <div class="card-title">Performance Breakdown</div>
+                    <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        View your continuous assessment marks, final exam scores, letter grades, and academic remarks.
+                    </p>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Subject / Unit</th>
+                                    <th>Score (%)</th>
+                                    <th>Grade</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsTableBody">
+                                <tr>
+                                    <td colspan="4" style="text-align: center; color: var(--text-muted);">Loading exam records...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <!-- Firebase SDK & Module Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f",
+            measurementId: "G-DT8VYBS3DV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            try {
+                // 1. Fetch student profile to get class and admission number
+                const studentSnap = await getDoc(doc(db, "students", user.uid));
+                if (!studentSnap.exists()) {
+                    alert("Student profile not found.");
+                    return;
+                }
+                const studentData = studentSnap.data();
+                const studentClass = studentData.className || studentData.grade || "N/A";
+                const studentAdmissionNo = studentData.admissionNumber || studentData.admNo || "";
+                
+                document.getElementById("studentClassVal").textContent = studentClass;
+
+                let resultsList = [];
+
+                // 2. Safely query examResults by studentUid
+                try {
+                    const qUid = query(collection(db, "examResults"), where("studentUid", "==", user.uid));
+                    const snapUid = await getDocs(qUid);
+                    snapUid.forEach(d => resultsList.push(d.data()));
+                } catch (e) {
+                    console.warn("Query by studentUid failed, trying alternative methods...", e);
+                }
+
+                // 3. If empty, try querying by admissionNumber
+                if (resultsList.length === 0 && studentAdmissionNo) {
+                    try {
+                        const qAdm = query(collection(db, "examResults"), where("admissionNumber", "==", studentAdmissionNo));
+                        const snapAdm = await getDocs(qAdm);
+                        snapAdm.forEach(d => resultsList.push(d.data()));
+                    } catch (e) {
+                        console.warn("Query by admissionNumber failed.", e);
+                    }
+                }
+
+                // 4. Safe Fallback: Fetch all documents from examResults or results collection and filter client-side
+                if (resultsList.length === 0) {
+                    const collectionNames = ["examResults", "results", "grades"];
+                    for (const colName of collectionNames) {
+                        try {
+                            const altSnap = await getDocs(collection(db, colName));
+                            altSnap.forEach(d => {
+                                const data = d.data();
+                                if (
+                                    data.studentUid === user.uid || 
+                                    data.studentId === user.uid || 
+                                    data.admissionNumber === studentAdmissionNo ||
+                                    (data.email && data.email === user.email)
+                                ) {
+                                    resultsList.push(data);
+                                }
+                            });
+                            if (resultsList.length > 0) break;
+                        } catch (err) {
+                            console.warn(`Could not read collection '${colName}':`, err);
+                        }
+                    }
+                }
+
+                renderResults(resultsList);
+            } catch (err) {
+                console.error("Error loading exam results:", err);
+                document.getElementById("resultsTableBody").innerHTML = `
+                    <tr><td colspan="4" style="text-align: center; color: var(--danger);">Failed to load results. Please check console.</td></tr>
+                `;
+            }
+        });
+
+        function renderResults(results) {
+            const tbody = document.getElementById("resultsTableBody");
+            const unitsCountVal = document.getElementById("unitsCountVal");
+            const avgScoreVal = document.getElementById("avgScoreVal");
+
+            if (!results || results.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">No exam results posted yet. Check back later.</td></tr>`;
+                unitsCountVal.textContent = "0";
+                avgScoreVal.textContent = "-";
+                return;
+            }
+
+            unitsCountVal.textContent = results.length;
+            let totalScore = 0;
+            tbody.innerHTML = "";
+
+            results.forEach(res => {
+                const subject = res.subject || res.unitName || res.name || "Unknown Unit";
+                const score = Number(res.score || res.marks || res.totalScore || 0);
+                totalScore += score;
+
+                // Determine grade badge styling
+                let grade = res.grade || getGradeLetter(score);
+                let badgeClass = "badge-success";
+                if (grade === "C" || grade === "D" || score < 50) badgeClass = "badge-warning";
+                if (grade === "E" || grade === "F" || score < 40) badgeClass = "badge-danger";
+
+                const remarks = res.remarks || res.comment || getRemarks(score);
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td><strong>${subject}</strong></td>
+                    <td>${score}%</td>
+                    <td><span class="badge ${badgeClass}">${grade}</span></td>
+                    <td>${remarks}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            const avg = (totalScore / results.length).toFixed(1);
+            avgScoreVal.textContent = `${avg}%`;
+        }
+
+        function getGradeLetter(score) {
+            if (score >= 70) return "A";
+            if (score >= 60) return "B";
+            if (score >= 50) return "C";
+            if (score >= 40) return "D";
+            return "E";
+        }
+
+        function getRemarks(score) {
+            if (score >= 70) return "Excellent performance";
+            if (score >= 60) return "Good work, keep it up";
+            if (score >= 50) return "Satisfactory";
+            if (score >= 40) return "Needs improvement";
+            return "Fail / Retake required";
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

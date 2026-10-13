@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Accountants | Elimu Admin Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --danger: #DC2626;
+            --warning: #D97706;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+        }
+
+        .sidebar-nav a.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            height: 70px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .content-body {
+            padding: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        @media(max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        input {
+            padding: 0.65rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+            background: #FFF;
+            color: var(--text-main);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+        .btn-danger:hover {
+            background-color: #B91C1C;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #F8FAFC;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>Admin Portal</span>
+            </div>
+            <nav class="sidebar-nav">
+                  <a href="/admin/dashboard.html" class="active">Dashboard</a>
+                <a href="admin-students.html">Students</a>
+                <a href="admin-teachers.html">Teachers</a>
+                 <a href="admin-accountants.html" class="active">Accountants</a>
+                 <a href="admin-create-vc.html" class="active">VC</a>
+                <a href="admin-parents.html">Parents</a>
+                <a href="admin-classes.html">Classes & Subjects</a>
+                <a href="admin-dorms.html" class="active">Hostel & Dorms</a>
+                <a href="admin-ip-management.html" class="active">Device IP Registration</a>
+                <a href="admin-attendance.html">Attendance</a>
+                <a href="admin-exams.html">Exams & Results</a>
+                <a href="admin-fees.html">Fee Management</a>
+                <a href="admin-timetable.html">Timetable</a>
+                <a href="admin-announcements.html">Announcements</a>
+                <a href="admin-materials.html">Learning Materials</a>
+                <a href="admin-settings.html">School Settings</a>
+                <a href="index.html">Log Out</a>
+            </nav>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-title">
+                    <h1>Accountant Registration & Management</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Registration Form Card -->
+                <div class="card">
+                    <div class="card-title">Register New Accountant</div>
+                    <form id="accountantForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" placeholder="e.g. Jane Doe" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" placeholder="accountant@elimu.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="text" id="phone" placeholder="+2547XXXXXXXX" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Temporary Password</label>
+                                <input type="password" id="password" placeholder="At least 6 characters" required minlength="6">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="registerBtn">Register Accountant Account</button>
+                    </form>
+                </div>
+
+                <!-- Accountants List Card -->
+                <div class="card">
+                    <div class="card-title">Registered Accountants</div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Role</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="accountantsTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading registered accountants...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Module Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, collection, getDocs, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f",
+            measurementId: "G-DT8VYBS3DV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Initialize a secondary Firebase Auth instance so registering an accountant doesn't log out the admin
+        const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
+        const secondaryAuth = getAuth(secondaryApp);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+            loadAccountants();
+        });
+
+        // Handle Accountant Registration
+        document.getElementById("accountantForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const registerBtn = document.getElementById("registerBtn");
+            registerBtn.disabled = true;
+            registerBtn.textContent = "Creating Account...";
+
+            const fullName = document.getElementById("fullName").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const password = document.getElementById("password").value;
+
+            try {
+                // Create user in Firebase Auth using secondary instance
+                const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+                const uid = userCredential.user.uid;
+
+                // Save accountant profile in Firestore under 'accountants' and 'users' collections
+                const accountantData = {
+                    uid: uid,
+                    fullName: fullName,
+                    email: email,
+                    phone: phone,
+                    role: "accountant",
+                    createdAt: serverTimestamp()
+                };
+
+                await setDoc(doc(db, "accountants", uid), accountantData);
+                await setDoc(doc(db, "users", uid), accountantData);
+
+                alert(`Accountant ${fullName} successfully registered!`);
+                document.getElementById("accountantForm").reset();
+                loadAccountants();
+            } catch (err) {
+                console.error("Error registering accountant:", err);
+                alert(`Registration failed: ${err.message}`);
+            } finally {
+                registerBtn.disabled = false;
+                registerBtn.textContent = "Register Accountant Account";
+            }
+        });
+
+        async function loadAccountants() {
+            const tbody = document.getElementById("accountantsTableBody");
+
+            try {
+                const snapshot = await getDocs(collection(db, "accountants"));
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No accountants registered yet.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                snapshot.forEach(docSnap => {
+                    const acc = docSnap.data();
+                    const accId = docSnap.id;
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td><strong>${acc.fullName}</strong></td>
+                        <td>${acc.email}</td>
+                        <td>${acc.phone || 'N/A'}</td>
+                        <td><span style="color: var(--primary); font-weight: 600;">Accountant</span></td>
+                        <td><button class="btn-primary btn-danger delete-btn" data-id="${accId}">Remove</button></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                // Attach delete handlers
+                document.querySelectorAll(".delete-btn").forEach(btn => {
+                    btn.addEventListener("click", async (e) => {
+                        const id = e.target.getAttribute("data-id");
+                        if (confirm("Are you sure you want to remove this accountant?")) {
+                            await deleteDoc(doc(db, "accountants", id));
+                            try { await deleteDoc(doc(db, "users", id)); } catch(err) {}
+                            loadAccountants();
+                        }
+                    });
+                });
+
+            } catch (err) {
+                console.error("Error loading accountants:", err);
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger); padding: 1.5rem;">Failed to load accountants.</td></tr>`;
+            }
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

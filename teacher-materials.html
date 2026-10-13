@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Materials | Elimu Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --danger: #DC2626;
+            --warning: #D97706;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+        }
+
+        .sidebar-nav a.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            height: 70px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .content-body {
+            padding: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        @media(max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        select, input, textarea {
+            padding: 0.65rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+            background: #FFF;
+            color: var(--text-main);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+        .btn-danger:hover {
+            background-color: #B91C1C;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #F8FAFC;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>Teacher Portal</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="teacher-dashboard.html">Dashboard</a>
+                <a href="teacher-classes.html">My Classes & Units</a>
+                 <a href="teacher-attendance.html" class="active">Class Attendance</a>
+                <a href="teacher-marks.html">Enter & Grade Marks</a>
+                <a href="teacher-materials.html" class="active">Learning Materials</a>
+                <a href="teacher-timetable.html">Teaching Schedule</a>
+                <a href="#" id="logoutBtn" style="margin-top: auto; color: var(--danger);">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-title">
+                    <h1>Learning Materials & Resource Uploads</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Upload Form Card -->
+                <div class="card">
+                    <div class="card-title">Upload New Study Material or Assignment</div>
+                    <form id="materialForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="classSelect">Target Class / Grade</label>
+                                <select id="classSelect" required>
+                                    <option value="">-- Choose Class --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="subjectSelect">Subject / Unit</label>
+                                <select id="subjectSelect" required>
+                                    <option value="">-- Choose Unit --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="materialTitle">Material Title / Topic</label>
+                                <input type="text" id="materialTitle" placeholder="e.g. Lecture 3: Database Normalization Notes" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="materialLink">Resource Link (Google Drive, PDF URL, etc.)</label>
+                                <input type="url" id="materialLink" placeholder="https://example.com/notes.pdf" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1.25rem;">
+                            <label for="materialDescription">Description / Instructions</label>
+                            <textarea id="materialDescription" placeholder="Provide brief instructions or summary for the students..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="uploadBtn">Publish Material to Students</button>
+                    </form>
+                </div>
+
+                <!-- Uploaded Materials List Card -->
+                <div class="card">
+                    <div class="card-title">Previously Uploaded Materials</div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Class & Unit</th>
+                                    <th>Description</th>
+                                    <th>Link / File</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="materialsTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading uploaded materials...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Module Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, getDocs, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f",
+            measurementId: "G-DT8VYBS3DV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let teacherFullName = "";
+        let teacherUid = "";
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+            teacherUid = user.uid;
+
+            try {
+                let teacherDoc = await getDoc(doc(db, "teachers", user.uid));
+                if (!teacherDoc.exists()) {
+                    teacherDoc = await getDoc(doc(db, "users", user.uid));
+                }
+
+                if (teacherDoc.exists()) {
+                    const data = teacherDoc.data();
+                    teacherFullName = data.fullName || data.name || `${data.firstName || ''} ${data.lastName || ''}`.trim() || "Instructor";
+                } else {
+                    teacherFullName = user.displayName || "Instructor";
+                }
+
+                loadTeacherFilterOptions(teacherFullName, user.uid);
+                loadUploadedMaterials(user.uid);
+            } catch (err) {
+                console.error("Error loading teacher profile:", err);
+            }
+        });
+
+        async function loadTeacherFilterOptions(name, uid) {
+            const classSelect = document.getElementById("classSelect");
+            const subjectSelect = document.getElementById("subjectSelect");
+
+            try {
+                const timetableSnap = await getDocs(collection(db, "timetable"));
+                const classesSet = new Set();
+                const subjectsSet = new Set();
+
+                timetableSnap.forEach(d => {
+                    const t = d.data();
+                    const tName = (t.teacher || t.teacherName || t.instructor || "").trim();
+                    if (tName.toLowerCase() === name.toLowerCase() || t.teacherUid === uid) {
+                        if (t.className || t.class) classesSet.add(t.className || t.class);
+                        if (t.subject || t.name) subjectsSet.add(t.subject || t.name);
+                    }
+                });
+
+                classSelect.innerHTML = `<option value="">-- Choose Class --</option>`;
+                classesSet.forEach(cls => {
+                    classSelect.innerHTML += `<option value="${cls}">${cls}</option>`;
+                });
+
+                subjectSelect.innerHTML = `<option value="">-- Choose Unit --</option>`;
+                subjectsSet.forEach(sub => {
+                    subjectSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
+                });
+            } catch (err) {
+                console.error("Error loading filters:", err);
+            }
+        }
+
+        // Handle Material Upload
+        document.getElementById("materialForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const uploadBtn = document.getElementById("uploadBtn");
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = "Publishing Material...";
+
+            const className = document.getElementById("classSelect").value;
+            const subjectName = document.getElementById("subjectSelect").value;
+            const title = document.getElementById("materialTitle").value.trim();
+            const link = document.getElementById("materialLink").value.trim();
+            const description = document.getElementById("materialDescription").value.trim();
+
+            try {
+                await addDoc(collection(db, "materials"), {
+                    className: className,
+                    subject: subjectName,
+                    title: title,
+                    fileUrl: link,
+                    description: description,
+                    uploadedByUid: teacherUid,
+                    uploadedByName: teacherFullName,
+                    createdAt: serverTimestamp()
+                });
+
+                alert("Study material published successfully!");
+                document.getElementById("materialForm").reset();
+                loadUploadedMaterials(teacherUid);
+            } catch (err) {
+                console.error("Error uploading material:", err);
+                alert(`Error: ${err.message}`);
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = "Publish Material to Students";
+            }
+        });
+
+        async function loadUploadedMaterials(uid) {
+            const tbody = document.getElementById("materialsTableBody");
+
+            try {
+                const snapshot = await getDocs(collection(db, "materials"));
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No learning materials published yet.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                snapshot.forEach(docSnap => {
+                    const mat = docSnap.data();
+                    const matId = docSnap.id;
+
+                    // Only show materials uploaded by this teacher (or all if admin)
+                    if (mat.uploadedByUid && mat.uploadedByUid !== uid) return;
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td><strong>${mat.title}</strong></td>
+                        <td>${mat.className} <br><span style="font-size: 0.75rem; color: var(--text-muted);">${mat.subject}</span></td>
+                        <td>${mat.description || 'No description'}</td>
+                        <td><a href="${mat.fileUrl}" target="_blank" style="color: var(--primary); font-weight: 500;">Open Link</a></td>
+                        <td><button class="btn-primary btn-danger delete-btn" data-id="${matId}">Delete</button></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                // Attach delete handlers
+                document.querySelectorAll(".delete-btn").forEach(btn => {
+                    btn.addEventListener("click", async (e) => {
+                        const id = e.target.getAttribute("data-id");
+                        if (confirm("Are you sure you want to delete this material?")) {
+                            await deleteDoc(doc(db, "materials", id));
+                            loadUploadedMaterials(uid);
+                        }
+                    });
+                });
+
+            } catch (err) {
+                console.error("Error loading materials:", err);
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger); padding: 1.5rem;">Failed to load materials.</td></tr>`;
+            }
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

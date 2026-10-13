@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Elimu Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --danger: #DC2626;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --border: #E2E8F0;
+            --radius: 12px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-main); color: #1E293B; display: flex; height: 100vh; overflow: hidden; }
+
+        .split-container { display: flex; width: 100vw; height: 100vh; }
+        
+        .brand-panel {
+            flex: 1;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem;
+            position: relative;
+        }
+
+        .brand-panel h1 { font-size: 2.75rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.025em; }
+        .brand-panel p { font-size: 1.1rem; color: #94A3B8; max-width: 480px; line-height: 1.6; }
+
+        .form-panel {
+            flex: 1;
+            background: var(--surface);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .login-card { width: 100%; max-width: 420px; padding: 2.5rem; }
+        .card-title { font-size: 1.75rem; font-weight: 700; color: var(--secondary); margin-bottom: 0.5rem; }
+        .card-sub { font-size: 0.9rem; color: #64748B; margin-bottom: 2rem; }
+        
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--secondary); }
+        input { width: 100%; padding: 0.85rem; border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.95rem; background: #F8FAFC; transition: border 0.2s, background 0.2s; }
+        input:focus { outline: none; border-color: var(--primary); background: #FFFFFF; }
+        
+        .btn-primary { width: 100%; padding: 0.85rem; background: var(--primary); color: white; border: none; border-radius: var(--radius); font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: background 0.2s; margin-top: 0.75rem; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        
+        .error-msg { color: var(--danger); font-size: 0.85rem; margin-top: 1rem; text-align: center; display: none; background: #FEE2E2; padding: 0.75rem; border-radius: 8px; }
+
+        @media (max-width: 900px) {
+            .brand-panel { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="split-container">
+        <!-- Left Branding Panel -->
+        <div class="brand-panel">
+            <h1>Elimu Portal</h1>
+            <p>Institutional management ecosystem featuring network-verified attendance tracking, automated unit billing, and secure executive multi-level transaction authorizations.</p>
+        </div>
+
+        <!-- Right Login Form Panel -->
+        <div class="form-panel">
+            <div class="login-card">
+                <div class="card-title">Welcome Back</div>
+                <div class="card-sub">Please sign in to access your portal dashboard</div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="name@elimu.ac.ke" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-primary" id="loginBtn">Sign In</button>
+                    <div id="errorMsg" class="error-msg"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Login Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const errorDiv = document.getElementById("errorMsg");
+            const btn = document.getElementById("loginBtn");
+
+            errorDiv.style.display = "none";
+            btn.disabled = true;
+            btn.textContent = "Authenticating...";
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const uid = userCredential.user.uid;
+
+                const userDocRef = doc(db, "users", uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (!userDoc.exists()) {
+                    throw new Error("User profile role record not found in database.");
+                }
+
+                const userData = userDoc.data();
+                const role = (userData.role || "").toLowerCase().trim();
+
+                switch (role) {
+                    case "vc":
+                        window.location.href = "vc-dashboard.html";
+                        break;
+                    case "admin":
+                        window.location.href = "admin-dashboard.html";
+                        break;
+                    case "accountant":
+                        window.location.href = "accountant-dashboard.html";
+                        break;
+                    case "teacher":
+                        window.location.href = "teacher-dashboard.html";
+                        break;
+                    case "student":
+                        window.location.href = "student-dashboard.html";
+                        break;
+                    case "parent":
+                        window.location.href = "parent-dashboard.html";
+                        break;
+                    default:
+                        window.location.href = "dashboard.html";
+                }
+            } catch (err) {
+                console.error("Login error:", err);
+                errorDiv.textContent = err.message;
+                errorDiv.style.display = "block";
+                btn.disabled = false;
+                btn.textContent = "Sign In";
+            }
+        });
+    </script>
+</body>
+</html>

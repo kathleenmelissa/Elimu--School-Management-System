@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classes & Subjects | Elimu School Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --danger: #DC2626;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+        }
+
+        .sidebar-nav a.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            height: 70px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .content-body {
+            padding: 2rem;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Grid Layout for Classes & Subjects sections */
+        .management-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media(max-width: 900px) {
+            .management-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-header h2 {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Tables inside cards */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+
+        th {
+            background-color: #F1F5F9;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.active {
+            background-color: #DCFCE7;
+            color: #166534;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal {
+            background: var(--surface);
+            width: 100%;
+            max-width: 450px;
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-header h2 {
+            font-size: 1.15rem;
+            color: var(--secondary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.4rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.65rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>Elimu Admin</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/admin/dashboard.html" class="active">Dashboard</a>
+                <a href="admin-students.html">Students</a>
+                <a href="admin-teachers.html">Teachers</a>
+                <a href="admin-parents.html">Parents</a>
+                <a href="admin-accountants.html" class="active">Accountants</a>
+                <a href="admin-create-vc.html" class="active">VC</a>
+                <a href="admin-classes.html">Classes & Subjects</a>
+                <a href="admin-ip-management.html" class="active">Device IP Registration</a>
+                <a href="admin-attendance.html">Attendance</a>
+                <a href="admin-exams.html">Exams & Results</a>
+                <a href="admin-fees.html">Fee Management</a>
+                <a href="admin-timetable.html">Timetable</a>
+                <a href="admin-announcements.html">Announcements</a>
+                <a href="admin-materials.html">Learning Materials</a>
+                <a href="admin-settings.html">School Settings</a>
+                <a href="index.html">Log Out</a>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-title">
+                    <h1>Classes & Subjects Setup</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <div class="management-grid">
+                    
+                    <!-- Classes Section -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>Classes / Streams</h2>
+                            <button class="btn-primary" id="openClassModal">+ Add Class</button>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Class Name</th>
+                                        <th>Level / Grade</th>
+                                        <th>Stream</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="classesTableBody">
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; color: var(--text-muted);">Loading classes...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Subjects Section -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>School Subjects</h2>
+                            <button class="btn-primary" id="openSubjectModal">+ Add Subject</button>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Subject Name</th>
+                                        <th>Code</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="subjectsTableBody">
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; color: var(--text-muted);">Loading subjects...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Class Modal -->
+    <div class="modal-overlay" id="classModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Add New Class</h2>
+                <button class="close-btn" id="closeClassModal">&times;</button>
+            </div>
+            <form id="classForm">
+                <div class="form-group">
+                    <label for="className">Class Name</label>
+                    <input type="text" id="className" required placeholder="Form 1 East / Grade 8 North">
+                </div>
+                <div class="form-group">
+                    <label for="classLevel">Grade / Form Level</label>
+                    <select id="classLevel" required>
+                        <option value="">Select Level</option>
+                        <option value="Grade 7">Grade 7</option>
+                        <option value="Grade 8">Grade 8</option>
+                        <option value="Grade 9">Grade 9</option>
+                        <option value="Form 1">Form 1</option>
+                        <option value="Form 2">Form 2</option>
+                        <option value="Form 3">Form 3</option>
+                        <option value="Form 4">Form 4</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="stream">Stream / Section</label>
+                    <input type="text" id="stream" required placeholder="East, West, North, Red">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 0.5rem;" id="saveClassBtn">Save Class</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Subject Modal -->
+    <div class="modal-overlay" id="subjectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Add New Subject</h2>
+                <button class="close-btn" id="closeSubjectModal">&times;</button>
+            </div>
+            <form id="subjectForm">
+                <div class="form-group">
+                    <label for="subjectName">Subject Name</label>
+                    <input type="text" id="subjectName" required placeholder="Mathematics, Physics">
+                </div>
+                <div class="form-group">
+                    <label for="subjectCode">Subject Code</label>
+                    <input type="text" id="subjectCode" required placeholder="MAT-101">
+                </div>
+                <div class="form-group">
+                    <label for="subjectCategory">Category</label>
+                    <select id="subjectCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="Languages">Languages</option>
+                        <option value="Sciences">Sciences</option>
+                        <option value="Humanities">Humanities</option>
+                        <option value="Technical">Technical</option>
+                        <option value="Compulsory">Compulsory</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 0.5rem;" id="saveSubjectBtn">Save Subject</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Module Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, addDoc, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f",
+            measurementId: "G-DT8VYBS3DV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Modal Controls for Classes
+        const classModal = document.getElementById("classModal");
+        document.getElementById("openClassModal").addEventListener("click", () => classModal.style.display = "flex");
+        document.getElementById("closeClassModal").addEventListener("click", () => classModal.style.display = "none");
+
+        // Modal Controls for Subjects
+        const subjectModal = document.getElementById("subjectModal");
+        document.getElementById("openSubjectModal").addEventListener("click", () => subjectModal.style.display = "flex");
+        document.getElementById("closeSubjectModal").addEventListener("click", () => subjectModal.style.display = "none");
+
+        window.addEventListener("click", (e) => {
+            if (e.target === classModal) classModal.style.display = "none";
+            if (e.target === subjectModal) subjectModal.style.display = "none";
+        });
+
+        // Auth Protection Guard
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "/login.html";
+                return;
+            }
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (!userDoc.exists() || userDoc.data().role !== "admin") {
+                    alert("Unauthorized access.");
+                    window.location.href = "/login.html";
+                    return;
+                }
+                loadClassesTable();
+                loadSubjectsTable();
+            } catch (err) {
+                console.error("Auth check error:", err);
+            }
+        });
+
+        // Load Classes Table
+        async function loadClassesTable() {
+            const tbody = document.getElementById("classesTableBody");
+            try {
+                const snapshot = await getDocs(collection(db, "classes"));
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No classes configured.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                snapshot.forEach(docSnap => {
+                    const c = docSnap.data();
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td><strong>${c.className}</strong></td>
+                        <td>${c.level || 'N/A'}</td>
+                        <td>${c.stream || 'N/A'}</td>
+                        <td><span class="badge active">Active</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error("Error loading classes:", error);
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--danger);">Failed to load classes.</td></tr>`;
+            }
+        }
+
+        // Load Subjects Table
+        async function loadSubjectsTable() {
+            const tbody = document.getElementById("subjectsTableBody");
+            try {
+                const snapshot = await getDocs(collection(db, "subjects"));
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No subjects configured.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                snapshot.forEach(docSnap => {
+                    const s = docSnap.data();
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td><strong>${s.subjectName}</strong></td>
+                        <td>${s.subjectCode || 'N/A'}</td>
+                        <td>${s.category || 'General'}</td>
+                        <td><span class="badge active">Active</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error("Error loading subjects:", error);
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--danger);">Failed to load subjects.</td></tr>`;
+            }
+        }
+
+        // Handle Class Submission
+        document.getElementById("classForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById("saveClassBtn");
+            btn.disabled = true;
+            btn.textContent = "Saving...";
+
+            try {
+                const classData = {
+                    className: document.getElementById("className").value.trim(),
+                    level: document.getElementById("classLevel").value,
+                    stream: document.getElementById("stream").value.trim(),
+                    createdAt: serverTimestamp()
+                };
+
+                await addDoc(collection(db, "classes"), classData);
+                alert("Class added successfully!");
+                classModal.style.display = "none";
+                document.getElementById("classForm").reset();
+                loadClassesTable();
+            } catch (err) {
+                console.error("Error saving class:", err);
+                alert(`Error: ${err.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Save Class";
+            }
+        });
+
+        // Handle Subject Submission
+        document.getElementById("subjectForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById("saveSubjectBtn");
+            btn.disabled = true;
+            btn.textContent = "Saving...";
+
+            try {
+                const subjectData = {
+                    subjectName: document.getElementById("subjectName").value.trim(),
+                    subjectCode: document.getElementById("subjectCode").value.trim(),
+                    category: document.getElementById("subjectCategory").value,
+                    createdAt: serverTimestamp()
+                };
+
+                await addDoc(collection(db, "subjects"), subjectData);
+                alert("Subject added successfully!");
+                subjectModal.style.display = "none";
+                document.getElementById("subjectForm").reset();
+                loadSubjectsTable();
+            } catch (err) {
+                console.error("Error saving subject:", err);
+                alert(`Error: ${err.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Save Subject";
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vice Chancellor Dashboard | Elimu Executive Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --secondary: #0F172A;
+            --success: #16A34A;
+            --danger: #DC2626;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --border: #E2E8F0;
+            --sidebar-width: 260px;
+            --radius: 10px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-main); color: #1E293B; display: flex; height: 100vh; overflow: hidden; }
+
+        .app-container { display: flex; width: 100vw; height: 100vh; }
+        aside { width: var(--sidebar-width); background: var(--secondary); color: white; display: flex; flex-direction: column; z-index: 100; }
+        .sidebar-brand { padding: 1.5rem; font-size: 1.1rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 0.75rem; }
+        .sidebar-brand svg { width: 24px; height: 24px; fill: var(--primary); }
+        .sidebar-nav { flex: 1; padding: 1rem 0; }
+        .sidebar-nav a { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; color: #94A3B8; text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+        .sidebar-nav a.active { background: rgba(255,255,255,0.06); color: white; border-left: 4px solid var(--primary); }
+
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        header { height: 70px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; position: sticky; top: 0; z-index: 50; }
+        .header-title h1 { font-size: 1.25rem; font-weight: 700; color: var(--secondary); }
+
+        .content-body { padding: 2rem; max-width: 1400px; width: 100%; margin: 0 auto; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.02); margin-bottom: 1.5rem; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
+        .card-title { font-size: 1.1rem; font-weight: 600; color: var(--secondary); }
+        
+        .search-input { padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; width: 280px; outline: none; }
+        .search-input:focus { border-color: var(--primary); }
+
+        .table-container { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); margin-top: 1rem; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+        th { background: #F8FAFC; color: #64748B; font-weight: 600; padding: 0.85rem; border-bottom: 1px solid var(--border); }
+        td { padding: 0.85rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+
+        .btn-approve { background: var(--success); color: white; border: none; padding: 0.45rem 0.85rem; border-radius: 6px; font-weight: 600; cursor: pointer; margin-right: 0.35rem; }
+        .btn-reject { background: var(--danger); color: white; border: none; padding: 0.45rem 0.85rem; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        
+        .badge { padding: 0.25rem 0.6rem; border-radius: 4px; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; }
+        .badge-approved { background: #DCFCE7; color: #166534; }
+        .badge-rejected { background: #FEE2E2; color: #991B1B; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                <span>VC Executive Portal</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="vc-dashboard.html" class="active">Fee Authorizations</a>
+                <a href="#" id="logoutBtn" style="margin-top: auto; color: var(--danger);">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header>
+                <div class="header-title">
+                    <h1>Vice Chancellor Financial Authorizations</h1>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Pending Approvals Queue -->
+                <div class="card">
+                    <div class="card-title">Pending Fee Transactions Awaiting Verification</div>
+                    <p style="font-size: 0.875rem; color: #64748B; margin-bottom: 1rem;">
+                        Review all accountant payment submissions against bank/M-Pesa transaction codes before authorizing updates to student fee balances[cite: 2].
+                    </p>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Submitted Date</th>
+                                    <th>Adm No.</th>
+                                    <th>Student Name</th>
+                                    <th>Mode</th>
+                                    <th>Transaction Code / Ref</th>
+                                    <th>Amount (KES)</th>
+                                    <th>Submitted By</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vcPendingTable">
+                                <tr><td colspan="8" style="text-align: center; padding: 2rem; color: #64748B;">Loading pending transaction approvals...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- History / Audit Trail Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Transaction History (Approved & Rejected)</div>
+                            <p style="font-size: 0.875rem; color: #64748B;">Audit trail of all processed fee payments and authorizations.</p>
+                        </div>
+                        <input type="text" id="searchHistory" class="search-input" placeholder="Search by student name, adm no, or code...">
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Processed Date</th>
+                                    <th>Adm No.</th>
+                                    <th>Student Name</th>
+                                    <th>Mode & Code</th>
+                                    <th>Amount (KES)</th>
+                                    <th>Status</th>
+                                    <th>Reviewed By</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vcHistoryTable">
+                                <tr><td colspan="7" style="text-align: center; padding: 2rem; color: #64748B;">Loading history records...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJKSBVleO-WCMBl1XUpRd1NDedAtKUsmI",
+            authDomain: "elimu-database.firebaseapp.com",
+            projectId: "elimu-database",
+            storageBucket: "elimu-database.firebasestorage.app",
+            messagingSenderId: "341586622750",
+            appId: "1:341586622750:web:26634351fe5f55bdb5f10f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let allTransactionsCache = [];
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+            listenForTransactions();
+        });
+
+        function listenForTransactions() {
+            const pendingTbody = document.getElementById("vcPendingTable");
+            const historyTbody = document.getElementById("vcHistoryTable");
+
+            // Query all transactions ordered by submission date
+            const q = query(collection(db, "feeTransactions"), orderBy("submittedAt", "desc"));
+
+            onSnapshot(q, (snap) => {
+                const pendingList = [];
+                allTransactionsCache = [];
+
+                snap.forEach(docSnap => {
+                    const data = { id: docSnap.id, ...docSnap.data() };
+                    if (data.status === "Pending VC Approval") {
+                        pendingList.push(data);
+                    } else {
+                        allTransactionsCache.push(data);
+                    }
+                });
+
+                // Render Pending Table
+                if (pendingList.length === 0) {
+                    pendingTbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 2rem; color: #64748B;">No pending payment transactions awaiting authorization.</td></tr>`;
+                } else {
+                    pendingTbody.innerHTML = "";
+                    pendingList.forEach(txn => {
+                        const dateStr = txn.submittedAt?.toDate ? txn.submittedAt.toDate().toLocaleString() : 'Recent';
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${dateStr}</td>
+                            <td><strong>${txn.admissionNumber || 'N/A'}</strong></td>
+                            <td>${txn.studentName || 'Student'}</td>
+                            <td>${txn.paymentMode || 'M-Pesa'}</td>
+                            <td><code style="background: #F1F5F9; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600;">${txn.transactionCode}</code></td>
+                            <td><strong style="color: var(--primary);">KES ${Number(txn.amount).toLocaleString()}</strong></td>
+                            <td>${txn.submittedByAccountant || 'Accountant'}</td>
+                            <td>
+                                <button class="btn-approve" data-id="${txn.id}" data-uid="${txn.studentUid}" data-amount="${txn.amount}" data-code="${txn.transactionCode}" data-name="${txn.studentName}">Approve</button>
+                                <button class="btn-reject" data-id="${txn.id}">Reject</button>
+                            </td>
+                        `;
+                        pendingTbody.appendChild(row);
+                    });
+                }
+
+                // Render History Table initially
+                renderHistoryTable(allTransactionsCache);
+
+                // Attach Approve / Reject Event Handlers
+                attachActionListeners();
+            });
+        }
+
+        function renderHistoryTable(dataList) {
+            const historyTbody = document.getElementById("vcHistoryTable");
+            if (dataList.length === 0) {
+                historyTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 2rem; color: #64748B;">No historical transaction records found.</td></tr>`;
+                return;
+            }
+
+            historyTbody.innerHTML = "";
+            dataList.forEach(txn => {
+                const processedDate = txn.approvedAt?.toDate ? txn.approvedAt.toDate().toLocaleString() : (txn.rejectedAt?.toDate ? txn.rejectedAt.toDate().toLocaleString() : 'N/A');
+                const badgeClass = txn.status === "Approved" ? "badge-approved" : "badge-rejected";
+                const reviewer = txn.approvedBy || txn.rejectedBy || 'VC';
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${processedDate}</td>
+                    <td><strong>${txn.admissionNumber || 'N/A'}</strong></td>
+                    <td>${txn.studentName || 'Student'}</td>
+                    <td>${txn.paymentMode || 'M-Pesa'}: <code style="background: #F1F5F9; padding: 0.1rem 0.3rem; border-radius: 4px;">${txn.transactionCode}</code></td>
+                    <td><strong>KES ${Number(txn.amount).toLocaleString()}</strong></td>
+                    <td><span class="badge ${badgeClass}">${txn.status}</span></td>
+                    <td style="font-size: 0.8rem; color: #64748B;">${reviewer}</td>
+                `;
+                historyTbody.appendChild(row);
+            });
+        }
+
+        // Search Filter for History Table
+        document.getElementById("searchHistory").addEventListener("input", (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            const filtered = allTransactionsCache.filter(txn => {
+                return (txn.studentName && txn.studentName.toLowerCase().includes(term)) ||
+                       (txn.admissionNumber && txn.admissionNumber.toLowerCase().includes(term)) ||
+                       (txn.transactionCode && txn.transactionCode.toLowerCase().includes(term));
+            });
+            renderHistoryTable(filtered);
+        });
+
+        function attachActionListeners() {
+            document.querySelectorAll(".btn-approve").forEach(btn => {
+                btn.addEventListener("click", async (e) => {
+                    const txnId = e.target.getAttribute("data-id");
+                    const studentUid = e.target.getAttribute("data-uid");
+                    const amount = Number(e.target.getAttribute("data-amount"));
+                    const code = e.target.getAttribute("data-code");
+                    const name = e.target.getAttribute("data-name");
+
+                    if (!confirm(`Confirm authorization of KES ${amount.toLocaleString()} (Ref: ${code}) for ${name}?`)) return;
+
+                    try {
+                        await updateDoc(doc(db, "feeTransactions", txnId), {
+                            status: "Approved",
+                            approvedBy: auth.currentUser.email,
+                            approvedAt: serverTimestamp()
+                        });
+
+                        const balanceRef = doc(db, "studentAccountBalances", studentUid);
+                        const balSnap = await getDoc(balanceRef);
+
+                        let currentPaid = 0;
+                        let totalBill = 0;
+
+                        if (balSnap.exists()) {
+                            const bData = balSnap.data();
+                            currentPaid = Number(bData.amountPaid || 0);
+                            totalBill = Number(bData.totalBill || 0);
+                        }
+
+                        const updatedAmountPaid = currentPaid + amount;
+                        const updatedBalance = totalBill - updatedAmountPaid;
+
+                        await setDoc(balanceRef, {
+                            amountPaid: updatedAmountPaid,
+                            balance: updatedBalance,
+                            lastApprovedTxnCode: code,
+                            updatedAt: serverTimestamp()
+                        }, { merge: true });
+
+                        alert("Transaction successfully authorized and credited.");
+                    } catch (err) {
+                        console.error("Approval error:", err);
+                        alert(`Approval failed: ${err.message}`);
+                    }
+                });
+            });
+
+            document.querySelectorAll(".btn-reject").forEach(btn => {
+                btn.addEventListener("click", async (e) => {
+                    const txnId = e.target.getAttribute("data-id");
+                    if (!confirm("Reject and discard this transaction code?")) return;
+
+                    try {
+                        await updateDoc(doc(db, "feeTransactions", txnId), {
+                            status: "Rejected",
+                            rejectedBy: auth.currentUser.email,
+                            rejectedAt: serverTimestamp()
+                        });
+                        alert("Transaction marked as rejected.");
+                    } catch (err) {
+                        alert(`Rejection failed: ${err.message}`);
+                    }
+                });
+            });
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>
